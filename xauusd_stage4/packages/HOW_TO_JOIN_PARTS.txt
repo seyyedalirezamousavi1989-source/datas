@@ -1,0 +1,5 @@
+Files named *.zip.partNN were split to stay under GitHub's 100 MB file limit.
+Join before unzipping:
+  Linux/macOS:  cat pkg_03_smc_M5.zip.part* > pkg_03_smc_M5.zip
+  Windows (cmd): copy /b pkg_03_smc_M5.zip.part00 + pkg_03_smc_M5.zip.part01 pkg_03_smc_M5.zip
+Check against sha256 values in XAUUSD_Stage4_SMC_Manifest.json (field "packages").
