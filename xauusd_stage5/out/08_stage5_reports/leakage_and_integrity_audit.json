@@ -1,0 +1,196 @@
+{
+ "checks": {
+  "snapshot_has_no_hindsight_columns": {
+   "pass": true,
+   "offending": []
+  },
+  "snapshot_columns_subset_of_allowed_list": {
+   "pass": true,
+   "offending": []
+  },
+  "no_unclosed_higher_timeframe_candle_in_any_snapshot": {
+   "pass": true,
+   "violations": 0,
+   "snapshots": 8626
+  },
+  "planning_targets_recomputable_from_snapshot_alone": {
+   "pass": true,
+   "mismatches": 0,
+   "n": 8626
+  },
+  "market_analysis_targets_recomputable_from_snapshot_alone": {
+   "pass": true,
+   "mismatches": 0,
+   "n": 8626
+  },
+  "val_test_probabilities_equal_train_fit_values": {
+   "pass": true,
+   "mismatches": 0,
+   "checked": 6748
+  },
+  "calibration_report_never_used_test_for_decisions": {
+   "pass": true,
+   "note": "decision field derives from validation only (code: probabilities.fit_all)"
+  },
+  "rendered_prompts_contain_no_hindsight_fields": {
+   "pass": true,
+   "violations": 0,
+   "checked": 3600
+  },
+  "trade_management_inputs_contain_only_state_known_at_decision_time": {
+   "pass": true,
+   "violations": 0,
+   "n": 4623,
+   "also_covered_by": "tests.test_stage5_simulator.test_no_lookahead_truncation"
+  },
+  "management_targets_recomputable_from_visible_state": {
+   "pass": true,
+   "mismatches": 0
+  },
+  "management_action_coverage": {
+   "pass": false,
+   "counts": {
+    "HOLD": 2573,
+    "MOVE_STOP_TO_BREAK_EVEN": 265,
+    "TAKE_PARTIAL_50": 331,
+    "CLOSE_NOW": 903,
+    "TAKE_PARTIAL_AND_MOVE_STOP_TO_BREAK_EVEN": 426,
+    "TRAIL_STOP_ATR": 89,
+    "TAKE_PARTIAL_33": 27,
+    "TRAIL_STOP_STRUCTURE": 9
+   }
+  },
+  "management_never_loosens_stop": {
+   "pass": true,
+   "violations": 0
+  },
+  "integrated_dataset_has_no_contradictory_labels": {
+   "pass": true,
+   "inconsistencies": 0,
+   "n": 8626
+  },
+  "record_split_equals_snapshot_split": {
+   "pass": true,
+   "violations": 0
+  },
+  "snapshots_inside_their_split_bounds": {
+   "pass": true,
+   "violations": 0
+  },
+  "label_and_management_windows_do_not_cross_split_boundaries": {
+   "pass": true
+  },
+  "embargo_respected": {
+   "pass": true
+  },
+  "unique_record_ids": {
+   "pass": true,
+   "duplicates": []
+  },
+  "required_target_fields_present": {
+   "pass": true,
+   "missing_by_task": {
+    "market_analysis": 0,
+    "scenario_forecasting": 0,
+    "entry_exit_planning": 0,
+    "risk_management": 0,
+    "position_sizing": 0,
+    "trade_management": 0,
+    "portfolio_risk": 0,
+    "post_trade_review": 0,
+    "integrated_trading_tasks": 0
+   }
+  },
+  "no_secrets_or_login_in_datasets": {
+   "pass": true,
+   "found": []
+  },
+  "no_martingale_or_recovery_language_in_final_texts": {
+   "pass": true
+  },
+  "position_risk_never_exceeds_policy_risk_pct": {
+   "pass": true,
+   "violations": 0
+  },
+  "no_exchange_volume_claims": {
+   "pass": true
+  }
+ },
+ "all_pass": false,
+ "counts": {
+  "market_analysis": 8626,
+  "scenario_forecasting": 8626,
+  "entry_exit_planning": 8626,
+  "risk_management": 5726,
+  "position_sizing": 5726,
+  "trade_management": 4623,
+  "portfolio_risk": 8051,
+  "post_trade_review": 3488,
+  "integrated_trading_tasks": 8626
+ },
+ "snapshots": 8626,
+ "records_by_task_and_split": {
+  "market_analysis": {
+   "train": 5252,
+   "val": 1390,
+   "test": 1984
+  },
+  "scenario_forecasting": {
+   "train": 5252,
+   "val": 1390,
+   "test": 1984
+  },
+  "entry_exit_planning": {
+   "train": 5252,
+   "val": 1390,
+   "test": 1984
+  },
+  "risk_management": {
+   "train": 3473,
+   "val": 957,
+   "test": 1296
+  },
+  "position_sizing": {
+   "train": 3473,
+   "val": 957,
+   "test": 1296
+  },
+  "trade_management": {
+   "train": 2922,
+   "val": 639,
+   "test": 1062
+  },
+  "portfolio_risk": {
+   "train": 4906,
+   "val": 1295,
+   "test": 1850
+  },
+  "post_trade_review": {
+   "train": 2181,
+   "val": 493,
+   "test": 814
+  },
+  "integrated_trading_tasks": {
+   "train": 5252,
+   "val": 1390,
+   "test": 1984
+  }
+ },
+ "planning_decision_distribution_by_split": {
+  "train": {
+   "NO_TRADE": 3071,
+   "SHORT": 853,
+   "LONG": 1328
+  },
+  "val": {
+   "NO_TRADE": 897,
+   "LONG": 428,
+   "SHORT": 65
+  },
+  "test": {
+   "NO_TRADE": 1170,
+   "SHORT": 395,
+   "LONG": 419
+  }
+ }
+}

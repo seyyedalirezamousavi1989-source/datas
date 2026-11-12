@@ -1,0 +1,897 @@
+{
+ "method": "Statistically grounded, calibrated scenario probabilities.\n\n* Targets are measured historical outcomes (label file) - never model confidence.\n* Estimator: hierarchical empirical-Bayes (Beta shrinkage) over causal context keys; fit on TRAIN only.\n* TRAIN rows receive blocked out-of-fold estimates (6 chronological folds, +-24h purge around the held-out block);\n  VAL/TEST rows receive the full-train estimate.\n* VALIDATION decides, per target, whether the context model has skill over the base rate (day-block bootstrap of the Brier difference).\n  If not, the base rate is used and reported as \"no validated skill\".  TEST is evaluated once, never used for any choice.\n",
+ "shrinkage_m": 100.0,
+ "levels": [
+  [
+   "h4_trend_state",
+   "h1_trend_state"
+  ],
+  [
+   "h4_trend_state",
+   "h1_trend_state",
+   "trend_state",
+   "session_code"
+  ],
+  [
+   "h4_trend_state",
+   "h1_trend_state",
+   "trend_state",
+   "session_code",
+   "vol_bin"
+  ]
+ ],
+ "vol_edges": [
+  0.862802,
+  1.025461
+ ],
+ "targets": {
+  "t_long_tp": {
+   "train_base_rate": 0.27144058295964124,
+   "train_n": 78496,
+   "val": {
+    "model": {
+     "brier": 0.2136314918997676,
+     "log_loss": 0.6198109656784155,
+     "ece": 0.04012678909406306,
+     "reliability": [
+      {
+       "bin": 0,
+       "n": 101,
+       "mean_pred": 0.0997,
+       "observed": 0.1881
+      },
+      {
+       "bin": 1,
+       "n": 4922,
+       "mean_pred": 0.1636,
+       "observed": 0.2328
+      },
+      {
+       "bin": 2,
+       "n": 5413,
+       "mean_pred": 0.2645,
+       "observed": 0.3131
+      },
+      {
+       "bin": 3,
+       "n": 10393,
+       "mean_pred": 0.3206,
+       "observed": 0.3408
+      },
+      {
+       "bin": 4,
+       "n": 697,
+       "mean_pred": 0.4218,
+       "observed": 0.363
+      }
+     ],
+     "n": 21526
+    },
+    "base_rate": {
+     "brier": 0.21500331260869604,
+     "log_loss": 0.6219287774783812,
+     "ece": 0.03772043162736988,
+     "reliability": [
+      {
+       "bin": 2,
+       "n": 21526,
+       "mean_pred": 0.2714,
+       "observed": 0.3092
+      }
+     ],
+     "n": 21526
+    },
+    "brier_gain_vs_base": 0.0013718207089284536,
+    "brier_gain_ci95": [
+     -0.0009621492258454167,
+     0.003968227073372079
+    ]
+   },
+   "decision_on_validation": "base_rate",
+   "test_frozen": {
+    "chosen": {
+     "brier": 0.20106667506553916,
+     "log_loss": 0.5918271881582469,
+     "ece": 0.007232434843811475,
+     "reliability": [
+      {
+       "bin": 2,
+       "n": 29601,
+       "mean_pred": 0.2714,
+       "observed": 0.2787
+      }
+     ],
+     "n": 29601
+    },
+    "base_rate": {
+     "brier": 0.20106667506553916,
+     "log_loss": 0.5918271881582469,
+     "ece": 0.007232434843811475,
+     "reliability": [
+      {
+       "bin": 2,
+       "n": 29601,
+       "mean_pred": 0.2714,
+       "observed": 0.2787
+      }
+     ],
+     "n": 29601
+    }
+   },
+   "note": "gain>0 with CI lower bound>0 required to use the context model"
+  },
+  "t_short_tp": {
+   "train_base_rate": 0.27044690175295555,
+   "train_n": 78496,
+   "val": {
+    "model": {
+     "brier": 0.1921271255806131,
+     "log_loss": 0.5709386921213352,
+     "ece": 0.027484037885942898,
+     "reliability": [
+      {
+       "bin": 0,
+       "n": 354,
+       "mean_pred": 0.0584,
+       "observed": 0.1412
+      },
+      {
+       "bin": 1,
+       "n": 3963,
+       "mean_pred": 0.1422,
+       "observed": 0.1577
+      },
+      {
+       "bin": 2,
+       "n": 6955,
+       "mean_pred": 0.2586,
+       "observed": 0.2769
+      },
+      {
+       "bin": 3,
+       "n": 9724,
+       "mean_pred": 0.3286,
+       "observed": 0.2991
+      },
+      {
+       "bin": 4,
+       "n": 530,
+       "mean_pred": 0.4206,
+       "observed": 0.2585
+      }
+     ],
+     "n": 21526
+    },
+    "base_rate": {
+     "brier": 0.19355932771792728,
+     "log_loss": 0.5756057644987536,
+     "ece": 0.008159435433156226,
+     "reliability": [
+      {
+       "bin": 2,
+       "n": 21526,
+       "mean_pred": 0.2704,
+       "observed": 0.2623
+      }
+     ],
+     "n": 21526
+    },
+    "brier_gain_vs_base": 0.0014322021373141926,
+    "brier_gain_ci95": [
+     -0.0010810989923951892,
+     0.004114137245737471
+    ]
+   },
+   "decision_on_validation": "base_rate",
+   "test_frozen": {
+    "chosen": {
+     "brier": 0.21076016392638064,
+     "log_loss": 0.6127853092609244,
+     "ece": 0.029306484956952927,
+     "reliability": [
+      {
+       "bin": 2,
+       "n": 29601,
+       "mean_pred": 0.2704,
+       "observed": 0.2998
+      }
+     ],
+     "n": 29601
+    },
+    "base_rate": {
+     "brier": 0.21076016392638064,
+     "log_loss": 0.6127853092609244,
+     "ece": 0.029306484956952927,
+     "reliability": [
+      {
+       "bin": 2,
+       "n": 29601,
+       "mean_pred": 0.2704,
+       "observed": 0.2998
+      }
+     ],
+     "n": 29601
+    }
+   },
+   "note": "gain>0 with CI lower bound>0 required to use the context model"
+  },
+  "t_bull_continuation": {
+   "train_base_rate": 0.47678862617203427,
+   "train_n": 78496,
+   "val": {
+    "model": {
+     "brier": 0.253749610317838,
+     "log_loss": 0.7007586619501337,
+     "ece": 0.05446356285612508,
+     "reliability": [
+      {
+       "bin": 3,
+       "n": 1190,
+       "mean_pred": 0.3805,
+       "observed": 0.5336
+      },
+      {
+       "bin": 4,
+       "n": 12386,
+       "mean_pred": 0.4559,
+       "observed": 0.5265
+      },
+      {
+       "bin": 5,
+       "n": 7275,
+       "mean_pred": 0.5243,
+       "observed": 0.5159
+      },
+      {
+       "bin": 6,
+       "n": 675,
+       "mean_pred": 0.6037,
+       "observed": 0.523
+      }
+     ],
+     "n": 21526
+    },
+    "base_rate": {
+     "brier": 0.2516149060836738,
+     "log_loss": 0.6963797035868806,
+     "ece": 0.046392642990838506,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 21526,
+       "mean_pred": 0.4768,
+       "observed": 0.5232
+      }
+     ],
+     "n": 21526
+    },
+    "brier_gain_vs_base": -0.002134704234164111,
+    "brier_gain_ci95": [
+     -0.003979728135704938,
+     0.00011221368925117834
+    ]
+   },
+   "decision_on_validation": "base_rate",
+   "test_frozen": {
+    "chosen": {
+     "brier": 0.24961740156141582,
+     "log_loss": 0.6923818209824343,
+     "ece": 0.003364071371967592,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 29601,
+       "mean_pred": 0.4768,
+       "observed": 0.4802
+      }
+     ],
+     "n": 29601
+    },
+    "base_rate": {
+     "brier": 0.24961740156141582,
+     "log_loss": 0.6923818209824343,
+     "ece": 0.003364071371967592,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 29601,
+       "mean_pred": 0.4768,
+       "observed": 0.4802
+      }
+     ],
+     "n": 29601
+    }
+   },
+   "note": "gain>0 with CI lower bound>0 required to use the context model"
+  },
+  "t_bear_continuation": {
+   "train_base_rate": 0.47185843864655524,
+   "train_n": 78496,
+   "val": {
+    "model": {
+     "brier": 0.24713954782001601,
+     "log_loss": 0.6873612651789351,
+     "ece": 0.026001210071153122,
+     "reliability": [
+      {
+       "bin": 3,
+       "n": 2744,
+       "mean_pred": 0.3727,
+       "observed": 0.3801
+      },
+      {
+       "bin": 4,
+       "n": 11217,
+       "mean_pred": 0.4606,
+       "observed": 0.4464
+      },
+      {
+       "bin": 5,
+       "n": 7565,
+       "mean_pred": 0.5223,
+       "observed": 0.472
+      }
+     ],
+     "n": 21526
+    },
+    "base_rate": {
+     "brier": 0.24780600832595004,
+     "log_loss": 0.6887553933478773,
+     "ece": 0.024910561660584973,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 21526,
+       "mean_pred": 0.4719,
+       "observed": 0.4469
+      }
+     ],
+     "n": 21526
+    },
+    "brier_gain_vs_base": 0.0006664605059340829,
+    "brier_gain_ci95": [
+     -0.0011434459649746604,
+     0.0025787100626930982
+    ]
+   },
+   "decision_on_validation": "base_rate",
+   "test_frozen": {
+    "chosen": {
+     "brier": 0.25071494107462494,
+     "log_loss": 0.6945794138065678,
+     "ece": 0.026773364333073646,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 29601,
+       "mean_pred": 0.4719,
+       "observed": 0.4986
+      }
+     ],
+     "n": 29601
+    },
+    "base_rate": {
+     "brier": 0.25071494107462494,
+     "log_loss": 0.6945794138065678,
+     "ece": 0.026773364333073646,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 29601,
+       "mean_pred": 0.4719,
+       "observed": 0.4986
+      }
+     ],
+     "n": 29601
+    }
+   },
+   "note": "gain>0 with CI lower bound>0 required to use the context model"
+  },
+  "t_range": {
+   "train_base_rate": 0.04719985731757032,
+   "train_n": 78496,
+   "val": {
+    "model": {
+     "brier": 0.024628120075002213,
+     "log_loss": 0.1017036638198308,
+     "ece": 0.019903000362594903,
+     "reliability": [
+      {
+       "bin": 0,
+       "n": 16933,
+       "mean_pred": 0.0152,
+       "observed": 0.0063
+      },
+      {
+       "bin": 1,
+       "n": 3390,
+       "mean_pred": 0.1309,
+       "observed": 0.0838
+      },
+      {
+       "bin": 2,
+       "n": 1203,
+       "mean_pred": 0.2302,
+       "observed": 0.1322
+      }
+     ],
+     "n": 21526
+    },
+    "base_rate": {
+     "brier": 0.02536636397159954,
+     "log_loss": 0.12512972022020744,
+     "ece": 0.021649360244263623,
+     "reliability": [
+      {
+       "bin": 0,
+       "n": 21526,
+       "mean_pred": 0.0472,
+       "observed": 0.0256
+      }
+     ],
+     "n": 21526
+    },
+    "brier_gain_vs_base": 0.0007382438965973299,
+    "brier_gain_ci95": [
+     -0.00032614007169723955,
+     0.001918867776290561
+    ]
+   },
+   "decision_on_validation": "base_rate",
+   "test_frozen": {
+    "chosen": {
+     "brier": 0.0177693604305101,
+     "log_loss": 0.09992091161787985,
+     "ece": 0.030038274938596652,
+     "reliability": [
+      {
+       "bin": 0,
+       "n": 29601,
+       "mean_pred": 0.0472,
+       "observed": 0.0172
+      }
+     ],
+     "n": 29601
+    },
+    "base_rate": {
+     "brier": 0.0177693604305101,
+     "log_loss": 0.09992091161787985,
+     "ece": 0.030038274938596652,
+     "reliability": [
+      {
+       "bin": 0,
+       "n": 29601,
+       "mean_pred": 0.0472,
+       "observed": 0.0172
+      }
+     ],
+     "n": 29601
+    }
+   },
+   "note": "gain>0 with CI lower bound>0 required to use the context model"
+  },
+  "t_trend_continuation": {
+   "train_base_rate": 0.4703933958418263,
+   "train_n": 78496,
+   "val": {
+    "model": {
+     "brier": 0.2502696864630727,
+     "log_loss": 0.6937022528186423,
+     "ece": 0.032623331893275834,
+     "reliability": [
+      {
+       "bin": 3,
+       "n": 1866,
+       "mean_pred": 0.3644,
+       "observed": 0.4298
+      },
+      {
+       "bin": 4,
+       "n": 11690,
+       "mean_pred": 0.4521,
+       "observed": 0.4783
+      },
+      {
+       "bin": 5,
+       "n": 7350,
+       "mean_pred": 0.521,
+       "observed": 0.4918
+      },
+      {
+       "bin": 6,
+       "n": 620,
+       "mean_pred": 0.6028,
+       "observed": 0.5048
+      }
+     ],
+     "n": 21526
+    },
+    "base_rate": {
+     "brier": 0.24966070793276382,
+     "log_loss": 0.6924688290052851,
+     "ece": 0.00907329560107989,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 21526,
+       "mean_pred": 0.4704,
+       "observed": 0.4795
+      }
+     ],
+     "n": 21526
+    },
+    "brier_gain_vs_base": -0.0006089785303088878,
+    "brier_gain_ci95": [
+     -0.002895941838002798,
+     0.0016838127311314152
+    ]
+   },
+   "decision_on_validation": "base_rate",
+   "test_frozen": {
+    "chosen": {
+     "brier": 0.2503654542655869,
+     "log_loss": 0.6938799724681034,
+     "ece": 0.020975139004969334,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 29601,
+       "mean_pred": 0.4704,
+       "observed": 0.4914
+      }
+     ],
+     "n": 29601
+    },
+    "base_rate": {
+     "brier": 0.2503654542655869,
+     "log_loss": 0.6938799724681034,
+     "ece": 0.020975139004969334,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 29601,
+       "mean_pred": 0.4704,
+       "observed": 0.4914
+      }
+     ],
+     "n": 29601
+    }
+   },
+   "note": "gain>0 with CI lower bound>0 required to use the context model"
+  },
+  "t_reversal": {
+   "train_base_rate": 0.47825366897676314,
+   "train_n": 78496,
+   "val": {
+    "model": {
+     "brier": 0.2506559511847268,
+     "log_loss": 0.6944911552768129,
+     "ece": 0.03373559323279768,
+     "reliability": [
+      {
+       "bin": 3,
+       "n": 2068,
+       "mean_pred": 0.3848,
+       "observed": 0.4236
+      },
+      {
+       "bin": 4,
+       "n": 11912,
+       "mean_pred": 0.464,
+       "observed": 0.4985
+      },
+      {
+       "bin": 5,
+       "n": 7491,
+       "mean_pred": 0.5255,
+       "observed": 0.495
+      },
+      {
+       "bin": 6,
+       "n": 55,
+       "mean_pred": 0.6135,
+       "observed": 0.7273
+      }
+     ],
+     "n": 21526
+    },
+    "base_rate": {
+     "brier": 0.2500667882111539,
+     "log_loss": 0.6932811399376911,
+     "ece": 0.012408785729173644,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 21526,
+       "mean_pred": 0.4783,
+       "observed": 0.4907
+      }
+     ],
+     "n": 21526
+    },
+    "brier_gain_vs_base": -0.0005891629735729164,
+    "brier_gain_ci95": [
+     -0.002056140132234525,
+     0.0011911619101286914
+    ]
+   },
+   "decision_on_validation": "base_rate",
+   "test_frozen": {
+    "chosen": {
+     "brier": 0.24992558976097357,
+     "log_loss": 0.6929985647732072,
+     "ece": 0.009162296700071904,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 29601,
+       "mean_pred": 0.4783,
+       "observed": 0.4874
+      }
+     ],
+     "n": 29601
+    },
+    "base_rate": {
+     "brier": 0.24992558976097357,
+     "log_loss": 0.6929985647732072,
+     "ece": 0.009162296700071904,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 29601,
+       "mean_pred": 0.4783,
+       "observed": 0.4874
+      }
+     ],
+     "n": 29601
+    }
+   },
+   "note": "gain>0 with CI lower bound>0 required to use the context model"
+  },
+  "t_no_trade": {
+   "train_base_rate": 0.45817621280065224,
+   "train_n": 78496,
+   "val": {
+    "model": {
+     "brier": 0.2377541395072666,
+     "log_loss": 0.6692640538984658,
+     "ece": 0.032819785092918836,
+     "reliability": [
+      {
+       "bin": 2,
+       "n": 542,
+       "mean_pred": 0.2909,
+       "observed": 0.3635
+      },
+      {
+       "bin": 3,
+       "n": 11639,
+       "mean_pred": 0.3602,
+       "observed": 0.3568
+      },
+      {
+       "bin": 4,
+       "n": 2808,
+       "mean_pred": 0.4415,
+       "observed": 0.4038
+      },
+      {
+       "bin": 5,
+       "n": 2039,
+       "mean_pred": 0.5672,
+       "observed": 0.5243
+      },
+      {
+       "bin": 6,
+       "n": 2636,
+       "mean_pred": 0.6369,
+       "observed": 0.5505
+      },
+      {
+       "bin": 7,
+       "n": 1614,
+       "mean_pred": 0.7606,
+       "observed": 0.6617
+      },
+      {
+       "bin": 8,
+       "n": 248,
+       "mean_pred": 0.8079,
+       "observed": 0.6169
+      }
+     ],
+     "n": 21526
+    },
+    "base_rate": {
+     "brier": 0.24577273705337016,
+     "log_loss": 0.6846769556340618,
+     "ece": 0.029624693707462624,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 21526,
+       "mean_pred": 0.4582,
+       "observed": 0.4286
+      }
+     ],
+     "n": 21526
+    },
+    "brier_gain_vs_base": 0.008018597546103552,
+    "brier_gain_ci95": [
+     0.002672215719139753,
+     0.013074799699750877
+    ]
+   },
+   "decision_on_validation": "context_model",
+   "test_frozen": {
+    "chosen": {
+     "brier": 0.24823676764624825,
+     "log_loss": 0.6917186997053439,
+     "ece": 0.052102677743515305,
+     "reliability": [
+      {
+       "bin": 2,
+       "n": 703,
+       "mean_pred": 0.2921,
+       "observed": 0.3457
+      },
+      {
+       "bin": 3,
+       "n": 14535,
+       "mean_pred": 0.3615,
+       "observed": 0.3706
+      },
+      {
+       "bin": 4,
+       "n": 5612,
+       "mean_pred": 0.443,
+       "observed": 0.4264
+      },
+      {
+       "bin": 5,
+       "n": 2637,
+       "mean_pred": 0.5641,
+       "observed": 0.4979
+      },
+      {
+       "bin": 6,
+       "n": 3474,
+       "mean_pred": 0.6394,
+       "observed": 0.5017
+      },
+      {
+       "bin": 7,
+       "n": 2266,
+       "mean_pred": 0.7623,
+       "observed": 0.515
+      },
+      {
+       "bin": 8,
+       "n": 374,
+       "mean_pred": 0.806,
+       "observed": 0.6257
+      }
+     ],
+     "n": 29601
+    },
+    "base_rate": {
+     "brier": 0.24518905066934274,
+     "log_loss": 0.6835068487083852,
+     "ece": 0.036602617314013375,
+     "reliability": [
+      {
+       "bin": 4,
+       "n": 29601,
+       "mean_pred": 0.4582,
+       "observed": 0.4216
+      }
+     ],
+     "n": 29601
+    }
+   },
+   "note": "gain>0 with CI lower bound>0 required to use the context model"
+  }
+ },
+ "movement_quantiles_train_by_h4_h1_trend": {
+  "(-1.0, -1.0)": {
+   "n": 24077,
+   "up_exc_atr_q": [
+    0.456,
+    1.123,
+    2.409,
+    4.51,
+    7.388
+   ],
+   "dn_exc_atr_q": [
+    0.409,
+    1.056,
+    2.454,
+    4.887,
+    7.999
+   ],
+   "bars_to_tp_median_long": 10.0
+  },
+  "(-1.0, 1.0)": {
+   "n": 12825,
+   "up_exc_atr_q": [
+    0.477,
+    1.211,
+    2.698,
+    5.305,
+    8.532
+   ],
+   "dn_exc_atr_q": [
+    0.435,
+    1.06,
+    2.251,
+    4.42,
+    7.132
+   ],
+   "bars_to_tp_median_long": 9.0
+  },
+  "(0.0, -1.0)": {
+   "n": 78,
+   "up_exc_atr_q": [
+    0.107,
+    0.394,
+    0.828,
+    2.311,
+    3.929
+   ],
+   "dn_exc_atr_q": [
+    2.17,
+    2.974,
+    4.928,
+    6.904,
+    7.617
+   ],
+   "bars_to_tp_median_long": 8.5
+  },
+  "(1.0, -1.0)": {
+   "n": 13140,
+   "up_exc_atr_q": [
+    0.456,
+    1.152,
+    2.539,
+    4.805,
+    7.509
+   ],
+   "dn_exc_atr_q": [
+    0.399,
+    1.022,
+    2.444,
+    4.89,
+    7.924
+   ],
+   "bars_to_tp_median_long": 11.0
+  },
+  "(1.0, 1.0)": {
+   "n": 28376,
+   "up_exc_atr_q": [
+    0.434,
+    1.071,
+    2.321,
+    4.637,
+    7.886
+   ],
+   "dn_exc_atr_q": [
+    0.453,
+    1.155,
+    2.532,
+    4.952,
+    8.059
+   ],
+   "bars_to_tp_median_long": 10.0
+  }
+ },
+ "decisions": {
+  "t_long_tp": "base_rate",
+  "t_short_tp": "base_rate",
+  "t_bull_continuation": "base_rate",
+  "t_bear_continuation": "base_rate",
+  "t_range": "base_rate",
+  "t_trend_continuation": "base_rate",
+  "t_reversal": "base_rate",
+  "t_no_trade": "context_model"
+ }
+}

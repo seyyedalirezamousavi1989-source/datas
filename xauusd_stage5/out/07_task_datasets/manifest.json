@@ -1,0 +1,130 @@
+{
+ "stage5_version": "5.0.0",
+ "schema_version": "5.0.0",
+ "provenance": {
+  "dataset_version": "1.0.0",
+  "stage5_version": "5.0.0",
+  "label_config_version": "label-v1",
+  "label_run_id": "1.0.0__label-v1__0191f9bcd59a",
+  "historical_cost_profile": "B_moderate_assumed",
+  "cost_profile_id": "0191f9bcd59a78a26f8a256d56e76df754e348b4f907e460ebb413148990d927",
+  "schema_version": "5.0.0",
+  "source": "Alpari MT5 candles (tick volume only), server-clock timestamps (timezone unverified)"
+ },
+ "counts_by_task_and_split": {
+  "market_analysis": {
+   "train": 5252,
+   "val": 1390,
+   "test": 1984
+  },
+  "scenario_forecasting": {
+   "train": 5252,
+   "val": 1390,
+   "test": 1984
+  },
+  "entry_exit_planning": {
+   "train": 5252,
+   "val": 1390,
+   "test": 1984
+  },
+  "position_sizing": {
+   "train": 3473,
+   "val": 957,
+   "test": 1296
+  },
+  "risk_management": {
+   "train": 3473,
+   "val": 957,
+   "test": 1296
+  },
+  "portfolio_risk": {
+   "train": 4906,
+   "val": 1295,
+   "test": 1850
+  },
+  "integrated_trading_tasks": {
+   "train": 5252,
+   "val": 1390,
+   "test": 1984
+  },
+  "trade_management": {
+   "train": 2922,
+   "val": 639,
+   "test": 1062
+  },
+  "post_trade_review": {
+   "train": 2181,
+   "val": 493,
+   "test": 814
+  }
+ },
+ "snapshots": 8626,
+ "split_config": {
+  "train_end": "2024-06-30 23:59:59",
+  "val_start": "2024-07-01 00:00:00",
+  "val_end": "2025-06-30 23:59:59",
+  "test_start": "2025-07-01 00:00:00",
+  "purge_bars": 96,
+  "embargo_bars": 96
+ },
+ "management_state_sampling": "up to 3 states per simulated trade, rarest action first (outcome-blind, action = f(visible state)); trade subsample uniform over each split",
+ "sampling": "idx%24==0 | event&idx%10==0 | setup&idx%8==0 (deterministic)",
+ "tool_schemas": [
+  "get_mt5_connection_status",
+  "get_active_account_context",
+  "get_symbol_specifications",
+  "get_current_spread",
+  "get_broker_context_status",
+  "update_user_account_profile",
+  "calculate_trade_costs",
+  "calculate_position_risk",
+  "calculate_position_size",
+  "validate_portfolio_risk"
+ ],
+ "files": {
+  "direction_labels.jsonl": {
+   "bytes": 8267761,
+   "sha256": "329bfb572166899958a4edf015f3455dfd0509369691df0bb73b66ce51e96fc4"
+  },
+  "entry_exit_planning.jsonl": {
+   "bytes": 13282961,
+   "sha256": "222009155cdb6883cccf577cc5aa5172b3bd4db7959a17b375764875d0e6cd05"
+  },
+  "integrated_trading_tasks.jsonl": {
+   "bytes": 24828177,
+   "sha256": "05a36934a7419661d22725e4188cd751cebb502f06d47b99c4f28ef159eab5c3"
+  },
+  "market_analysis.jsonl": {
+   "bytes": 15259225,
+   "sha256": "a546b1b24476d05d1245c64841a7df455dcb2fc3711c8624eab37e188096ece6"
+  },
+  "portfolio_risk.jsonl": {
+   "bytes": 37669285,
+   "sha256": "4902da747c54979154e56e7e5ec995168fe9159b151d7899262c4198d11913de"
+  },
+  "position_sizing.jsonl": {
+   "bytes": 21103171,
+   "sha256": "ade38ee65fddf1be605d7840232c1307855b211f3ac33f6cffd0d661e609fd4c"
+  },
+  "post_trade_review.jsonl": {
+   "bytes": 6484408,
+   "sha256": "077b735026bb7d2500fdf4f4a1da0d19329b1f6cc41bea09efa98b68f3367ab6"
+  },
+  "risk_management.jsonl": {
+   "bytes": 19141285,
+   "sha256": "9a87a0989c672c2c078bd1db3de6bf47cf8995c43644039ed131c2cc66ba3869"
+  },
+  "scenario_forecasting.jsonl": {
+   "bytes": 39165027,
+   "sha256": "f326719faca2bbba23f0fdeb3c2d34ab51121fd4a7db335eee899132d45935d7"
+  },
+  "snapshots.jsonl": {
+   "bytes": 22216630,
+   "sha256": "f485ae9610d9f777f3e3b2285524e52aab50465b2d06bd9a3bb3e23be43ec336"
+  },
+  "trade_management.jsonl": {
+   "bytes": 7358185,
+   "sha256": "698a487219489cf47ae7d348f6c3a6974feaf9d8fe1d33eb6db6da507ff20120"
+  }
+ }
+}

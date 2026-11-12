@@ -1,0 +1,115 @@
+{
+ "rows_train": 78496,
+ "rows_val": 21526,
+ "n_features": 254,
+ "duplicates": {
+  "d1_close": "prev_day_close"
+ },
+ "n_constant": 1,
+ "n_very_sparse": 5,
+ "n_high_corr_features": 78,
+ "n_dir_confirmed": 7,
+ "n_notrade_confirmed": 40,
+ "n_strong_univariate_review": 0,
+ "incremental_value_by_group_cumulative": {
+  "direction(up-first vs down-first)": {
+   "G0_vol_session": {
+    "n_features_cumulative": 11,
+    "val_auc": 0.514169477466999,
+    "train_auc": 0.6110526801380547
+   },
+   "G1_trend_momentum": {
+    "n_features_cumulative": 23,
+    "val_auc": 0.5019757834537754,
+    "train_auc": 0.6516280624809245
+   },
+   "G2_smc_structure": {
+    "n_features_cumulative": 39,
+    "val_auc": 0.5024906530771431,
+    "train_auc": 0.6774833926373911
+   },
+   "G3_mtf": {
+    "n_features_cumulative": 95,
+    "val_auc": 0.5147974233021277,
+    "train_auc": 0.7631007970273936
+   }
+  },
+  "no_trade": {
+   "G0_vol_session": {
+    "n_features_cumulative": 11,
+    "val_auc": 0.6097421740008799,
+    "train_auc": 0.6974827458227794
+   },
+   "G1_trend_momentum": {
+    "n_features_cumulative": 23,
+    "val_auc": 0.6097204206413254,
+    "train_auc": 0.7136483854141696
+   },
+   "G2_smc_structure": {
+    "n_features_cumulative": 39,
+    "val_auc": 0.6159407887388361,
+    "train_auc": 0.7301101990905412
+   },
+   "G3_mtf": {
+    "n_features_cumulative": 95,
+    "val_auc": 0.6085719384305459,
+    "train_auc": 0.7487475039795883
+   }
+  }
+ },
+ "policy": "Correlated features are NOT dropped solely for correlation; the model snapshot uses a curated subset (S.SNAPSHOT_COLS) chosen for distinct analytical purpose. No feature was selected with validation or test data; validation only confirms train-side evidence.",
+ "inference_availability": "All columns are computed from candles closed at bar_close_time; HTF columns use nominal-close merge_asof (Stage 4). real_volume is all zero; tick_volume is a broker tick count.",
+ "test_split_used": false,
+ "top10_univariate_direction_auc_val": [
+  {
+   "feature": "ob_bear_top",
+   "dir_auc_train": 0.4987,
+   "dir_auc_val": 0.4585
+  },
+  {
+   "feature": "ob_bear_bottom",
+   "dir_auc_train": 0.4992,
+   "dir_auc_val": 0.4587
+  },
+  {
+   "feature": "fvg_bear_top",
+   "dir_auc_train": 0.4968,
+   "dir_auc_val": 0.4602
+  },
+  {
+   "feature": "fvg_bear_bottom",
+   "dir_auc_train": 0.4969,
+   "dir_auc_val": 0.4603
+  },
+  {
+   "feature": "prev_week_high",
+   "dir_auc_train": 0.5,
+   "dir_auc_val": 0.4662
+  },
+  {
+   "feature": "week_open",
+   "dir_auc_train": 0.5012,
+   "dir_auc_val": 0.4662
+  },
+  {
+   "feature": "minute_of_day",
+   "dir_auc_train": 0.5056,
+   "dir_auc_val": 0.5325
+  },
+  {
+   "feature": "server_hour",
+   "dir_auc_train": 0.5057,
+   "dir_auc_val": 0.5324
+  },
+  {
+   "feature": "prev_week_low",
+   "dir_auc_train": 0.4998,
+   "dir_auc_val": 0.4687
+  },
+  {
+   "feature": "h4_last_swing_high",
+   "dir_auc_train": 0.5003,
+   "dir_auc_val": 0.4692
+  }
+ ]
+}

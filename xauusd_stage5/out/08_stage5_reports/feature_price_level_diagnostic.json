@@ -1,0 +1,55 @@
+{
+ "n_absolute_price_level_columns": 42,
+ "examples": [
+  "bb_lower",
+  "bb_mid",
+  "bb_upper",
+  "d1_close",
+  "day_high_so_far",
+  "day_low_so_far",
+  "day_open",
+  "ema_20",
+  "ema_200",
+  "ema_50",
+  "fvg_bear_bottom",
+  "fvg_bear_top",
+  "fvg_bull_bottom",
+  "fvg_bull_top",
+  "h1_close",
+  "h1_last_swing_high",
+  "h1_last_swing_low",
+  "h4_close",
+  "high",
+  "last_swing_high",
+  "last_swing_low",
+  "low",
+  "m30_close",
+  "m30_last_swing_high",
+  "m30_last_swing_low"
+ ],
+ "ablation": {
+  "with_price_levels": {
+   "n_features": 95,
+   "direction": {
+    "train_auc": 0.7631,
+    "val_auc": 0.5148
+   },
+   "no_trade": {
+    "train_auc": 0.7487,
+    "val_auc": 0.6086
+   }
+  },
+  "without_price_levels": {
+   "n_features": 95,
+   "direction": {
+    "train_auc": 0.7631,
+    "val_auc": 0.5148
+   },
+   "no_trade": {
+    "train_auc": 0.7487,
+    "val_auc": 0.6086
+   }
+  }
+ },
+ "note": "diagnostic only; test split not read; no feature set was chosen from this"
+}

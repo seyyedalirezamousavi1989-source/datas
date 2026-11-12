@@ -1,0 +1,62 @@
+{
+ "summary": "No external source was integrated. None could be verified in this environment (no supplied data; no general internet access). Nothing was fabricated.",
+ "protocol": [
+  "historical availability over the full 2020-11..2026-11 span",
+  "timestamp + timezone reliability (DST handling, release-time vs bar-close)",
+  "missingness and revision policy (point-in-time)",
+  "availability at actual inference time (latency, API access, licence)",
+  "incremental value: train-fit HistGradientBoosting ablation, validation-confirmed (see feature_report.py)",
+  "redundancy vs existing features (correlation + ablation)"
+ ],
+ "candidates": {
+  "economic_calendar_actuals": {
+   "purpose": "event risk windows (NFP, CPI, FOMC) and surprise = actual - forecast",
+   "needs": [
+    "event timestamp in UTC with documented timezone",
+    "actual AND consensus forecast AND first-release (not revised) values",
+    "release-time availability (point-in-time)",
+    "licence permitting model training"
+   ],
+   "decision": "NOT_INTEGRATED_UNVERIFIED",
+   "incremental_value": "unmeasured"
+  },
+  "us_dollar_index_dxy": {
+   "purpose": "gold/USD inverse relationship regime context",
+   "needs": [
+    "intraday history aligned to broker server clock (timezone offset documented)",
+    "same bar-close availability at inference",
+    "licence; note DXY is itself ~58% EURUSD (check redundancy with FX data)"
+   ],
+   "decision": "NOT_INTEGRATED_UNVERIFIED",
+   "incremental_value": "unmeasured"
+  },
+  "us_treasury_yields_10y_real": {
+   "purpose": "real-rate driver of gold",
+   "needs": [
+    "intraday or at least daily point-in-time series (FRED daily is end-of-day: only usable lagged)",
+    "release timing",
+    "licence"
+   ],
+   "decision": "NOT_INTEGRATED_UNVERIFIED",
+   "incremental_value": "unmeasured"
+  },
+  "silver_xagusd": {
+   "purpose": "metals co-movement / confirmation",
+   "needs": [
+    "same-broker XAGUSD candles preferred (same clock, same costs, available at inference through MT5)",
+    "measure incremental value vs XAUUSD own features"
+   ],
+   "decision": "NOT_INTEGRATED_UNVERIFIED",
+   "incremental_value": "unmeasured"
+  },
+  "tick_volume_existing": {
+   "purpose": "already in the data (tick_volume); evaluated in the feature report",
+   "status": "USED_AS_IS",
+   "notes": "broker tick count, NOT centralized exchange volume; real_volume is all zero",
+   "decision": "USED_AS_IS",
+   "incremental_value": "unmeasured"
+  }
+ },
+ "how_to_add": "Provide a CSV (time, value columns) and run stage5.source_quality.evaluate_source(df, tz_note=..., max_lag_minutes=...); then add features through the existing feature pipeline and rerun feature_report.py (train selection, validation confirmation).",
+ "news_tasks": "News/event-based tasks are excluded: no verified historical event data exists in the project; models must not invent news."
+}

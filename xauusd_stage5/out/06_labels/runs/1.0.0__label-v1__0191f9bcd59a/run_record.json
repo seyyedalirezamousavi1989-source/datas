@@ -1,0 +1,69 @@
+{
+ "run_id": "1.0.0__label-v1__0191f9bcd59a",
+ "created_at": "2026-11-11T09:09:40Z",
+ "dataset_version": "1.0.0",
+ "label_config_version": "label-v1",
+ "cost_profile_id": "0191f9bcd59a78a26f8a256d56e76df754e348b4f907e460ebb413148990d927",
+ "cost_scenario": "B_moderate_assumed",
+ "broker_assumptions": {
+  "broker": "Alpari (data source only)",
+  "account_label": "unspecified",
+  "verified": false
+ },
+ "contract_assumptions": {
+  "point": 0.01,
+  "contract_size": 100.0,
+  "account_currency": "USD",
+  "profit_currency": "USD",
+  "verified": false,
+  "note": "XAUUSD 100 oz/lot, 2 digits assumed for historical labeling; unverified"
+ },
+ "spread_source": {
+  "source": "bar_spread",
+  "fallback_points": 12
+ },
+ "commission_assumptions": {
+  "amount": 3.5,
+  "currency": "USD",
+  "basis": "per_lot_per_side"
+ },
+ "slippage_assumptions": {
+  "model": "fixed_price",
+  "value": 0.05
+ },
+ "configuration_version": "label-v1",
+ "extra": {
+  "label_parameters": {
+   "sl_atr_mult": 1.5,
+   "rr": 2.0,
+   "horizon_bars": 32,
+   "min_net_r": 0.0,
+   "max_spread_atr": 0.35,
+   "warmup_rows": 500
+  },
+  "scenario": {
+   "move_atr": 1.5,
+   "zone_levels": [
+    "prev_day_high",
+    "prev_day_low"
+   ]
+  },
+  "other_cost_scenarios": {
+   "A_spread_only": "c110f67ca569336768ab75df757c50b1d1892b465c94cec712b4ed50151246a0",
+   "B_moderate_assumed": "0191f9bcd59a78a26f8a256d56e76df754e348b4f907e460ebb413148990d927",
+   "C_stress_assumed": "005da9f3f86b2ad7b59bf1cc8cd39f18517098b274f754789256ee5d172ef835"
+  },
+  "rows": 141734,
+  "valid_rows": 129896,
+  "label_distribution_valid": {
+   "NO_TRADE": 57782,
+   "LONG": 36331,
+   "SHORT": 35783
+  },
+  "ambiguous_long": 163,
+  "ambiguous_short": 266,
+  "primary_cost_scenario": "B_moderate_assumed",
+  "all_cost_assumptions_unverified": true
+ },
+ "note": "historical/market-derived run; independent of any live account"
+}
