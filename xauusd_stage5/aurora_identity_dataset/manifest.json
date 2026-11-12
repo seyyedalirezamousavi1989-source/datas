@@ -1,0 +1,104 @@
+{
+ "dataset": "aurora_identity",
+ "version": "1.0.0",
+ "seed": 2026,
+ "canonical": {
+  "creator": "Alireza Mousavi",
+  "creator_aliases": [
+   "Alireza Mousavi",
+   "علیرضا موسوی",
+   "سید علیرضا موسوی"
+  ],
+  "creator_role": "creator, founder and lead developer",
+  "agent": "AURORA QUANT",
+  "organization": "AURORA AI Research Group",
+  "predecessor": "LocalChat",
+  "mission": "specialized AI research and trading-intelligence agent, with particular emphasis on Forex and XAUUSD analysis"
+ },
+ "split_policy": "per intent, last two question phrasings held out (val, test); phrasings never shared across splits",
+ "files": {
+  "creator_identity.jsonl": {
+   "rows": 50,
+   "sha256": "11f0230803779d25627b8c4aec165872def477bc2152236ef0477ae1c2b47c9a",
+   "split": {
+    "train": 34,
+    "test": 8,
+    "val": 8
+   }
+  },
+  "agent_identity.jsonl": {
+   "rows": 48,
+   "sha256": "5158c330126725a523f074f19ac0ad253dea12ef5c022bc8c470a91de1f3df23",
+   "split": {
+    "val": 8,
+    "train": 32,
+    "test": 8
+   }
+  },
+  "organization_identity.jsonl": {
+   "rows": 50,
+   "sha256": "673a47397de9ec35998f5c602eb121a5647e9d883c538332c2088b4d1f6d676d",
+   "split": {
+    "train": 34,
+    "test": 8,
+    "val": 8
+   }
+  },
+  "creator_relationship.jsonl": {
+   "rows": 96,
+   "sha256": "cb9aabbc9c468b0881568c5e1eee3e412a436e5a8b1960dc95b2eaa967ec3732",
+   "split": {
+    "train": 64,
+    "test": 16,
+    "val": 16
+   }
+  },
+  "identity_security.jsonl": {
+   "rows": 48,
+   "sha256": "a06100aa72d8c302dd2f8245654034290b74bceac4fa9b8b09d1be78f583156f",
+   "split": {
+    "train": 32,
+    "val": 8,
+    "test": 8
+   }
+  },
+  "capability_awareness.jsonl": {
+   "rows": 600,
+   "sha256": "e3ab64b0bcfc633fc5f4084026cfc6d929e8756e2ade981b24fb7898887b2b7f",
+   "split": {
+    "train": 400,
+    "test": 100,
+    "val": 100
+   }
+  },
+  "model_vs_agent_identity.jsonl": {
+   "rows": 60,
+   "sha256": "16000ac16394dd63265deab7d41a2bae0be3986ed6d7225e1580e3b6295e947d",
+   "split": {
+    "train": 40,
+    "val": 10,
+    "test": 10
+   }
+  },
+  "persistent_memory_awareness.jsonl": {
+   "rows": 108,
+   "sha256": "c53dfa88adaef7e13a92bbbed1b17f2626dc198fb142b1bfb84100b6a314a05a",
+   "split": {
+    "train": 72,
+    "test": 18,
+    "val": 18
+   }
+  },
+  "identity_integrated.jsonl": {
+   "rows": 96,
+   "sha256": "91ab65ae4242fae1e32eb03268d3c5c548b7cc905f0ff2af68181b3697e596ee",
+   "split": {
+    "train": 64,
+    "test": 16,
+    "val": 16
+   }
+  }
+ },
+ "trained": false,
+ "notes": "Identity/awareness SFT data. Contains no secrets, e-mail, verification code or private data. Combine with the XAUUSD Stage 5 task datasets for trading analysis training."
+}

@@ -1,0 +1,23 @@
+{
+ "dataset": "aurora_forex_combined_sft",
+ "sources": {
+  "forex_stage5": "XAUUSD Stage 5 task datasets rendered by stage5.render_sft (train/val only; test split NOT included)",
+  "aurora_identity": "AURORA QUANT identity/awareness dataset"
+ },
+ "seed_shuffle": 3407,
+ "format": "OpenAI-style messages (+tools for tool tasks); fields: id, messages, split, tools?, source",
+ "trained": false,
+ "files": {
+  "aurora_forex_combined_train.jsonl": {
+   "sha256": "69e614db1bb8fb26cd67e855e0b308db7894c19cd88cd5cd718c364a5cc542f2",
+   "rows": 38735,
+   "bytes": 307145165
+  },
+  "aurora_forex_combined_val.jsonl": {
+   "sha256": "4997070f4ce58b044a192ee8957466a357190dff7d40be91a65c944121adc8ad",
+   "rows": 10093,
+   "bytes": 81044653
+  }
+ },
+ "notes": "XAUUSD only. No validated predictive skill (see docs/FINAL_REPORT.md). Rebuild with join_and_verify.py."
+}
