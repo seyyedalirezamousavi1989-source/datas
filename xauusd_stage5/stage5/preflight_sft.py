@@ -39,6 +39,8 @@ def _validate_message(example: dict[str, Any], line_no: int, path: Path) -> None
     messages = example.get("messages")
     if not isinstance(messages, list) or len(messages) < 3:
         raise PreflightError(f"{path.name}:{line_no}: messages must contain system, user and assistant")
+    if any(not isinstance(message, dict) for message in messages):
+        raise PreflightError(f"{path.name}:{line_no}: every message must be an object")
     if messages[0].get("role") != "system" or messages[1].get("role") != "user":
         raise PreflightError(f"{path.name}:{line_no}: first messages must be system then user")
     if messages[-1].get("role") != "assistant":
@@ -57,8 +59,12 @@ def _validate_message(example: dict[str, Any], line_no: int, path: Path) -> None
                 if not isinstance(calls, list):
                     raise PreflightError(f"{path.name}:{line_no}: tool_calls must be a list")
                 for call in calls:
+                    if not isinstance(call, dict):
+                        raise PreflightError(f"{path.name}:{line_no}: each tool call must be an object")
                     call_id = call.get("id")
                     fn = call.get("function", {})
+                    if not isinstance(fn, dict):
+                        raise PreflightError(f"{path.name}:{line_no}: tool call function must be an object")
                     if not call_id or call_id in known_call_ids or not fn.get("name"):
                         raise PreflightError(f"{path.name}:{line_no}: malformed or duplicate tool call")
                     try:
