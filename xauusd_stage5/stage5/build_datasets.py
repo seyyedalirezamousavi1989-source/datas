@@ -334,7 +334,7 @@ def build(out_dir=None, seed=2026, max_trades=2400):
             for pol_name, cfg in POLICIES.items():
                 # Dense, still-causal sampling is essential around partial exits and trailing transitions;
                 # sparse sampling can skip the short-lived states that trigger those playbook actions.
-                interval = 1 if pol_name in ("multi_tp", "structure_trail", "atr_trail") else 6
+                interval = 1 if pol_name in ("break_even", "partial_be", "multi_tp", "structure_trail", "atr_trail") else 6
                 t = simulate_trade(ctx, side, int(row["idx"]), cfg, prim, float(row["entry_price"]), sl_dist, int(row["entry_time"].value), record_every=interval)
                 alt[pol_name] = t
             review_policy = str(rng.choice(["fixed", "break_even", "atr_trail", "structure_trail", "partial_be", "multi_tp"]))
