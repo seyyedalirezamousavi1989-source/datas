@@ -408,7 +408,7 @@ def build(out_dir=None, seed=2026, max_trades=2400):
         f.close()
     # manifest
     man = {"stage5_version": S.STAGE5_VERSION, "schema_version": SCHEMA_VERSION, "provenance": prov, "counts_by_task_and_split": counts, "snapshots": int(len(lab)),
-           "split_config": S.SPLIT, "management_state_sampling": "one naturally observed state per available playbook action per simulated trade, sampled across all nine independent management-policy paths; dense M5 sampling for multi_tp/structure_trail/atr_trail; action is a pure function of visible state; trade subsample uniform over each split", "sampling": "idx%24==0 | event&idx%10==0 | setup&idx%8==0 (deterministic)", "tool_schemas": [t["name"] for t in TOOL_SCHEMAS],
+           "split_config": S.SPLIT, "management_state_sampling": "one naturally observed state per available playbook action per simulated trade, sampled across all nine independent management-policy paths; dense M5 sampling for break_even/partial_be/multi_tp/structure_trail/atr_trail; action is a pure function of visible state; trade subsample uniform over each split", "sampling": "idx%24==0 | event&idx%10==0 | setup&idx%8==0 (deterministic)", "tool_schemas": [t["name"] for t in TOOL_SCHEMAS],
            "files": {}}
     for fn in sorted(os.listdir(out_dir)):
         p = os.path.join(out_dir, fn)
