@@ -332,38 +332,50 @@ def build(out_dir=None, seed=2026, max_trades=2400):
             sl_dist = float(row["sl_dist"])
             alt = {}
             for pol_name, cfg in POLICIES.items():
-                t = simulate_trade(ctx, side, int(row["idx"]), cfg, prim, float(row["entry_price"]), sl_dist, int(row["entry_time"].value), record_every=6)
+                # Dense, still-causal sampling is essential around partial exits and trailing transitions;
+                # sparse sampling can skip the short-lived states that trigger those playbook actions.
+                interval = 1 if pol_name in ("multi_tp", "structure_trail", "atr_trail") else 6
+                t = simulate_trade(ctx, side, int(row["idx"]), cfg, prim, float(row["entry_price"]), sl_dist, int(row["entry_time"].value), record_every=interval)
                 alt[pol_name] = t
-            chosen = str(rng.choice(["fixed", "break_even", "atr_trail", "structure_trail", "partial_be", "multi_tp"]))
-            base_t = alt[chosen]                       # states are produced by a randomly chosen management policy (on-policy states)
-            recs_ = [x for x in base_t["records"] if x["step"] >= 1]
-            # action-stratified state sampling (outcome-blind: the action is a pure function of the visible state): per trade take up to 3 states,
-            # preferring rarer actions first so that every management family is represented; HOLD fills the remainder.
+            base_t = alt["fixed"]  # post-trade review reference is fixed-policy, not a randomly selected management path
+            # Build candidates from every independently simulated policy path. Each target is still computed
+            # only from that candidate's visible state; no future outcome enters action selection.
             def _mk(st_):
                 state = {k: st_[k] for k in ("side", "entry_price", "initial_sl", "initial_tp", "current_sl", "current_tp", "remaining_size", "unrealized_r", "mfe_r", "mae_r", "trailing_active",
                                              "break_even_active", "partial_exits", "costs_r_so_far", "price", "steps_held", "risk_distance", "atr_now", "atr_ratio_now", "structure_invalidated")}
                 mkt = {"m15_close": st_["m15_close"], "m15_trend_state": st_["m15_trend_state"], "m15_last_swing_high": st_["m15_last_swing_high"], "m15_last_swing_low": st_["m15_last_swing_low"]}
                 return state, mkt, management_playbook(clean({**state, **mkt}))
-            cands = [(st_,) + _mk(st_) for st_ in recs_]
+            cands = []
+            for pol_name, path_result in alt.items():
+                for st_ in path_result["records"]:
+                    if st_["step"] < 1:
+                        continue
+                    state, mkt, pb = _mk(st_)
+                    cands.append((pol_name, path_result, st_, state, mkt, pb))
             by_act = {}
-            for c_ in cands:
-                by_act.setdefault(c_[3]["action"], []).append(c_)
+            for candidate in cands:
+                by_act.setdefault(candidate[5]["action"], []).append(candidate)
+            # One example per naturally observed action per entry snapshot. No synthetic labels or duplication.
             order = ["TAKE_PARTIAL_33", "TRAIL_STOP_STRUCTURE", "TRAIL_STOP_ATR", "TAKE_PARTIAL_50", "MOVE_STOP_TO_BREAK_EVEN", "TAKE_PARTIAL_AND_MOVE_STOP_TO_BREAK_EVEN", "CLOSE_NOW", "HOLD"]
             chosen_states = []
             for act in order:
-                if act in by_act and len(chosen_states) < 3:
-                    chosen_states.append(by_act[act][int(rng.integers(len(by_act[act])))])
-            for st_, state, mkt, pb in sorted(chosen_states, key=lambda c_: c_[0]["step"]):
-                mrec = {"record_id": f"trade_management:{sid}:s{st_['step']}", "task": "trade_management", "snapshot_id": sid, "split": split,
-                        "timestamp": str(pd.Timestamp(st_["time_ns"])), "provenance": prov,
+                if act in by_act:
+                    options = by_act[act]
+                    chosen_states.append(options[int(rng.integers(len(options)))])
+            for pol_name, path_result, st_, state, mkt, pb in sorted(chosen_states, key=lambda item: (item[2]["step"], item[0])):
+                record_id = f"trade_management:{sid}:{pol_name}:s{st_['step']}"
+                mrec = {"record_id": record_id, "task": "trade_management", "snapshot_id": sid, "split": split,
+                        "timestamp": str(pd.Timestamp(st_["time_ns"])), "provenance": {**prov, "management_simulation_policy": pol_name},
                         "input": {"instruction": "Decide how to manage this open trade now using only the state shown (no future information).",
-                                  "entry_snapshot_id": sid, "entry_time": str(row["entry_time"]), "open_trade_state": {**state, "minutes_since_entry": st_["steps_held"] * 5},
+                                  "entry_snapshot_id": sid, "entry_time": str(row["entry_time"]), "simulation_policy": pol_name,
+                                  "open_trade_state": {**state, "minutes_since_entry": st_["steps_held"] * 5},
                                   "market_state_now": mkt},
                         "target": {"action": pb["action"], "new_stop": pb["new_stop"], "reasons": pb["reason"], "constraints": ["stops are only tightened, never widened", "no size increase", "no averaging down"]}}
                 W(files["trade_management"], mrec); bump("trade_management", split)
-                fin = base_t["net_r"]
+                fin = path_result["net_r"]
                 now_net = st_["unrealized_r"] - st_["costs_r_so_far"]
-                W(outc["management_outcomes"], {"record_id": mrec["record_id"], "split": split, "final_net_r_if_hold_same_policy": round(fin, 4), "net_r_if_closed_now_approx": round(now_net, 4),
+                W(outc["management_outcomes"], {"record_id": record_id, "split": split, "simulation_policy": pol_name,
+                                                "final_net_r_if_hold_same_policy": round(fin, 4), "net_r_if_closed_now_approx": round(now_net, 4),
                                                 "hindsight_hold_better": bool(fin > now_net + 0.15)})
             # post-trade review (information complete after exit)
             ex_t = base_t
