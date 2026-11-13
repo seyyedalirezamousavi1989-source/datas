@@ -137,6 +137,14 @@ def main() -> None:
         raise RuntimeError(
             f"Task dataset version {task_manifest.get('stage5_version')} does not match code {S.STAGE5_VERSION}; rebuild task datasets first"
         )
+    # Verify every source JSONL against the just-written task manifest before rendering it.
+    for name in (*TASKS, "snapshots"):
+        source_path = TASK_DIR / f"{name}.jsonl"
+        meta = task_manifest.get("files", {}).get(source_path.name)
+        if not meta:
+            raise RuntimeError(f"Task manifest is missing {source_path.name}")
+        if source_path.stat().st_size != int(meta["bytes"]) or sha256_file(source_path) != meta["sha256"]:
+            raise RuntimeError(f"Source task dataset integrity failure: {source_path.name}; rebuild Stage 5")
     snapshots = load_snapshots(str(TASK_DIR))
     files = {}
     for split in ("train", "val"):
