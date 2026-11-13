@@ -6,24 +6,20 @@ Verify the exact model repository, tokenizer, chat template, Unsloth support, pa
 
 ## 0. Mandatory gates
 
-1. Rebuild and verify the distributed SFT artifacts:
-   `python out/09_sft/join_and_verify.py`
-2. Run structural and integrity preflight:
-   `python -m stage5.preflight_sft`
-3. Run tokenizer-aware preflight with the exact local tokenizer intended for training:
+1. Ensure the Stage 4 source outputs exist at the paths configured in `stage5/s5config.py` (at minimum the M15 multi-timeframe file and M5 normalized candles). If they are missing, restore/extract the Stage 4 packages first.
+2. Rebuild Stage 5 task datasets, run all audits/tests, package SFT, join gzip parts and run structural preflight:
+   `bash run_stage5.sh`
+   This pipeline now includes the Stage 5.1 multi-policy management sampler, SFT packaging, gzip/hash verification and stale-source preflight.
+3. Inspect `out/08_stage5_reports/leakage_and_integrity_audit.json`. Every check must pass, especially `management_action_coverage`; all eight supported management actions must have at least 30 naturally generated records. If this gate fails, do not train and do not lower the threshold or fabricate/duplicate examples.
+4. Run tokenizer-aware preflight with the exact local tokenizer intended for training:
    `python -m stage5.preflight_sft --tokenizer PATH_TO_LOCAL_QWEN35_4B_TOKENIZER --max-seq-length 4096`
-   The tokenizer-aware run must pass. Review p50/p90/p95/p99/max token counts; do not silently truncate examples.
-4. Run the project audits and tests:
-   `python -m stage5.audits`
-   `pytest -q`
-5. **Do not train while any audit/test/preflight check fails.** In the currently published audit report, 22 of 23 checks passed and `management_action_coverage` failed. The rare actions `TAKE_PARTIAL_33` and `TRAIL_STOP_STRUCTURE` have very low counts. This must be resolved by inspecting the generation/replay logic and producing valid naturally occurring examples, or explicitly excluding/marking unsupported actions. Never duplicate or fabricate examples merely to balance counts.
+   Review p50/p90/p95/p99/max token counts. The run must pass without silent truncation.
+5. Verify the exact Qwen3.5-4B model repository, tokenizer/chat template, current Unsloth support, package versions and training API. The model identifier in older instructions was not verified.
 6. Keep the test split sealed. It was already scored once for frozen baseline reporting, so it is not a pristine untouched holdout for further tuning. Prefer a later, genuinely unseen period after 2026-11-10 or a properly designed walk-forward evaluation for final generalization assessment.
 
 ## 1. SFT data
 
-The manifest contains:
-- `aurora_forex_combined_train.jsonl`: 38,735 rows
-- `aurora_forex_combined_val.jsonl`: 10,093 rows
+The current row counts are written to `out/09_sft/SFT_MANIFEST.json` after every deterministic package build. Do not rely on the older checked-in counts: Stage 5.1 increases naturally sampled management examples, so the regenerated train/validation row counts and hashes will differ.
 
 The test split is intentionally excluded. The files combine XAUUSD Stage 5 task examples and AURORA identity/awareness examples. The preflight checks the manifest SHA256/byte/row counts, JSONL validity, required message structure, tool-call/result linkage, duplicate IDs and train/validation separation. It does not prove label correctness or trading skill.
 
