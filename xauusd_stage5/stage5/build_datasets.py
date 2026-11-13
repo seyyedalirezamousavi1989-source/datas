@@ -337,7 +337,8 @@ def build(out_dir=None, seed=2026, max_trades=2400):
                 interval = 1 if pol_name in ("multi_tp", "structure_trail", "atr_trail") else 6
                 t = simulate_trade(ctx, side, int(row["idx"]), cfg, prim, float(row["entry_price"]), sl_dist, int(row["entry_time"].value), record_every=interval)
                 alt[pol_name] = t
-            base_t = alt["fixed"]  # post-trade review reference is fixed-policy, not a randomly selected management path
+            review_policy = str(rng.choice(["fixed", "break_even", "atr_trail", "structure_trail", "partial_be", "multi_tp"]))
+            base_t = alt[review_policy]  # preserve randomized policy selection for post-trade review
             # Build candidates from every independently simulated policy path. Each target is still computed
             # only from that candidate's visible state; no future outcome enters action selection.
             def _mk(st_):
