@@ -12,7 +12,7 @@ DIR_DATASETS = os.path.join(OUT, "07_task_datasets")
 DIR_REPORTS5 = os.path.join(OUT, "08_stage5_reports")
 RUNS_DIR = os.path.join(OUT, "06_labels", "runs")
 
-STAGE5_VERSION = "5.0.0"
+STAGE5_VERSION = "5.1.0"
 DATASET_VERSION = "1.0.0"
 LABEL_CONFIG_VERSION = "label-v1"
 
