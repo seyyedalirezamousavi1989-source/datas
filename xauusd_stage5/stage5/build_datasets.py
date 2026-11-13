@@ -368,7 +368,7 @@ def build(out_dir=None, seed=2026, max_trades=2400):
                 mrec = {"record_id": record_id, "task": "trade_management", "snapshot_id": sid, "split": split,
                         "timestamp": str(pd.Timestamp(st_["time_ns"])), "provenance": {**prov, "management_simulation_policy": pol_name},
                         "input": {"instruction": "Decide how to manage this open trade now using only the state shown (no future information).",
-                                  "entry_snapshot_id": sid, "entry_time": str(row["entry_time"]), "simulation_policy": pol_name,
+                                  "entry_snapshot_id": sid, "entry_time": str(row["entry_time"]),
                                   "open_trade_state": {**state, "minutes_since_entry": st_["steps_held"] * 5},
                                   "market_state_now": mkt},
                         "target": {"action": pb["action"], "new_stop": pb["new_stop"], "reasons": pb["reason"], "constraints": ["stops are only tightened, never widened", "no size increase", "no averaging down"]}}
