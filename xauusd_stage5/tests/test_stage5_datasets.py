@@ -24,11 +24,12 @@ class TestDatasets(unittest.TestCase):
     def test_audit_all_pass(self):
         o = audits.run()
         failed = {k: v for k, v in o["checks"].items() if not v["pass"]}
-        # KNOWN, DOCUMENTED shortfall: thin coverage of TAKE_PARTIAL_33 / TRAIL_STOP_STRUCTURE (see FINAL_REPORT.md); nothing else may fail
-        self.assertTrue(set(failed) <= {"management_action_coverage"}, failed)
+        self.assertEqual(failed, {}, f"Stage 5 audit must pass every gate: {failed}")
         c = o["checks"]["management_action_coverage"]["counts"]
-        for a in ("HOLD", "CLOSE_NOW", "TAKE_PARTIAL_50", "MOVE_STOP_TO_BREAK_EVEN", "TAKE_PARTIAL_AND_MOVE_STOP_TO_BREAK_EVEN", "TRAIL_STOP_ATR"):
-            self.assertGreaterEqual(c.get(a, 0), 30, a)
+        required = ("HOLD", "CLOSE_NOW", "TAKE_PARTIAL_50", "TAKE_PARTIAL_33", "MOVE_STOP_TO_BREAK_EVEN",
+                    "TAKE_PARTIAL_AND_MOVE_STOP_TO_BREAK_EVEN", "TRAIL_STOP_ATR", "TRAIL_STOP_STRUCTURE")
+        for action in required:
+            self.assertGreaterEqual(c.get(action, 0), 30, action)
 
     def test_all_nine_task_files_and_splits_present(self):
         for t in audits.TASKS:
