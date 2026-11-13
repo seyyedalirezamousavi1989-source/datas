@@ -173,6 +173,17 @@ def main(argv: list[str] | None = None) -> int:
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         if manifest.get("trained") is not False:
             raise PreflightError("manifest trained flag must remain false before training")
+        task_manifest_path = ROOT / "out" / "07_task_datasets" / "manifest.json"
+        if not task_manifest_path.is_file():
+            raise PreflightError("missing source task-dataset manifest; rebuild Stage 5 datasets first")
+        task_manifest = json.loads(task_manifest_path.read_text(encoding="utf-8"))
+        source_hash = sha256_file(task_manifest_path)
+        if manifest.get("source_task_manifest_sha256") != source_hash:
+            raise PreflightError("SFT package is stale: source task-dataset manifest hash does not match; run python -m stage5.package_sft")
+        if manifest.get("source_stage5_version") != task_manifest.get("stage5_version"):
+            raise PreflightError("SFT package Stage 5 version does not match the source task dataset")
+        if manifest.get("source_stage5_schema_version") != task_manifest.get("schema_version"):
+            raise PreflightError("SFT package Stage 5 schema version does not match the source task dataset")
         tokenizer = None
         if args.tokenizer:
             try:
