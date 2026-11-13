@@ -1,40 +1,65 @@
-# Training instructions: Qwen3.5-4B + QLoRA with Unsloth (NOT executed — no training was run in this project)
+# Training instructions: Qwen3.5-4B + QLoRA with Unsloth
 
-Verify package names, model id and API against the current Unsloth / Qwen documentation before running; they change quickly.
-The model id below is the expected naming and was **not verified** in this environment.
+**Status: NOT TRAINING-READY YET.** No model training has been run and no model weights have been changed. This guide is a cautious workflow, not a claim that the current dataset has predictive edge or that the exact Qwen3.5-4B model/API is supported by every current Unsloth release.
 
-## 0. Gate before any training
-1. Run the audit: `python3 -m stage5.audits` → all checks must pass. 2. Keep the **test split sealed**: do not read test metrics to choose anything.
-3. The only genuinely untouched future holdout is data after 2026-11-10 (the current test split was scored once for the frozen baselines).
+Verify the exact model repository, tokenizer, chat template, Unsloth support, package versions and training API against current upstream documentation before starting.
 
-## 1. Data
+## 0. Mandatory gates
+
+1. Rebuild and verify the distributed SFT artifacts:
+   `python out/09_sft/join_and_verify.py`
+2. Run structural and integrity preflight:
+   `python -m stage5.preflight_sft`
+3. Run tokenizer-aware preflight with the exact local tokenizer intended for training:
+   `python -m stage5.preflight_sft --tokenizer PATH_TO_LOCAL_QWEN35_4B_TOKENIZER --max-seq-length 4096`
+   The tokenizer-aware run must pass. Review p50/p90/p95/p99/max token counts; do not silently truncate examples.
+4. Run the project audits and tests:
+   `python -m stage5.audits`
+   `pytest -q`
+5. **Do not train while any audit/test/preflight check fails.** In the currently published audit report, 22 of 23 checks passed and `management_action_coverage` failed. The rare actions `TAKE_PARTIAL_33` and `TRAIL_STOP_STRUCTURE` have very low counts. This must be resolved by inspecting the generation/replay logic and producing valid naturally occurring examples, or explicitly excluding/marking unsupported actions. Never duplicate or fabricate examples merely to balance counts.
+6. Keep the test split sealed. It was already scored once for frozen baseline reporting, so it is not a pristine untouched holdout for further tuning. Prefer a later, genuinely unseen period after 2026-11-10 or a properly designed walk-forward evaluation for final generalization assessment.
+
+## 1. SFT data
+
+The manifest contains:
+- `aurora_forex_combined_train.jsonl`: 38,735 rows
+- `aurora_forex_combined_val.jsonl`: 10,093 rows
+
+The test split is intentionally excluded. The files combine XAUUSD Stage 5 task examples and AURORA identity/awareness examples. The preflight checks the manifest SHA256/byte/row counts, JSONL validity, required message structure, tool-call/result linkage, duplicate IDs and train/validation separation. It does not prove label correctness or trading skill.
+
+Use the exact tokenizer and chat template for the model being trained. The preflight reports token percentiles and fails if any rendered example exceeds the selected maximum length. Increase the context length or deliberately redesign/re-render overly long examples; do not silently truncate tool results or assistant targets.
+
+Do not rebalance LONG/SHORT/NO_TRADE or rare management actions by copying records. Any re-sampling must be justified by a documented, outcome-blind method and re-audited for leakage.
+
+## 2. Suggested experimental starting point (not validated)
+
+Only after all gates pass and model compatibility is confirmed, a small pilot could start with:
 ```
-python3 -m stage5.render_sft --split train --out sft_train.jsonl
-python3 -m stage5.render_sft --split val   --out sft_val.jsonl
+load_in_4bit=True
+max_seq_length=4096  # only if tokenizer-aware preflight confirms it is sufficient
+LoRA: r=16, alpha=32, dropout=0.0
+learning_rate=1e-4, cosine schedule, warmup_ratio=0.03
+epochs=1, per_device_train_batch_size=2, gradient_accumulation_steps=16
+weight_decay=0.01, seed=3407
 ```
-Format: OpenAI-style `messages` (+ `tools` for tool tasks). Check the token length distribution with the Qwen tokenizer; the integrated and portfolio
-records are the longest (expect roughly 2–4k tokens); set `max_seq_length` to cover the 99th percentile (start with 4096) rather than truncating tool results.
-Mixture: use the files as they are (natural proportions); do **not** upsample LONG/SHORT planning examples — NO_TRADE is intended to dominate.
 
-## 2. Suggested starting configuration (not tuned)
-```
-load_in_4bit=True, max_seq_length=4096
-LoRA: r=16, alpha=32, dropout=0.0, target_modules=[q,k,v,o,gate,up,down]
-lr=1e-4 (cosine, warmup 3%), epochs=1-2, per_device_batch=2, grad_accum=16, weight_decay=0.01, optim=adamw_8bit, seed=3407
-loss only on assistant tokens (train_on_responses_only); tool results are inputs, not targets
-eval on sft_val.jsonl every ~200 steps; early stop on validation loss; keep the best checkpoint
-```
-Use the model's own chat template (tool-calling variant). Do not enable "thinking" traces unless you add them to the data deliberately.
+These are experimental values, not optimized recommendations. Confirm target modules against the actual model architecture; do not assume generic `q,k,v,o,gate,up,down` names are valid. Ensure loss is applied only to intended assistant target tokens. Tool results are context/input, not model-generated target text. Use the model's native chat template and only enable reasoning/thinking formats if deliberately represented in the data.
 
-## 3. Evaluation protocol (after training; uses stage5/evaluate.py scorers)
-- decisions: precision/recall/F1/confusion vs the **procedure** targets (imitation) and vs hindsight labels (`direction_labels`); compare with the baselines in `task_evaluation_report.json`;
-- probabilities: Brier/log-loss/calibration against the base-rate baseline (`score_probabilities`); a model must not report confidence as probability;
-- tool tasks: tool-call validity (schema), argument exactness, and `score_sizing` against the deterministic reference; final numbers must equal tool results;
-- management: action agreement with the playbook and net R / drawdown / MFE capture of the actions on val paths;
-- stability by year, session, volatility regime; costs under scenarios A/B/C.
-Failure criteria worth enforcing: any invented lot size/tick value, any martingale/loss-recovery language, any ignored `incomplete` tool status.
+Run a small smoke-training job first, verify loss decreases without NaNs, inspect decoded generations and tool calls, then decide whether a longer run is warranted. Save the base model identifier, exact package versions, tokenizer revision, config, seed and dataset hashes with every run.
 
-## 4. Runtime
-Expose `broker_context.cli tool-schemas` (10 tools) to the model runtime. The model must call tools for sizing, costs, spread and account context;
-account facts come from the live read-only MT5 provider (after you authorize it and pass `live_integration_check.py` on Windows) or from the user profile.
-Live trading execution is out of scope.
+## 3. Evaluation protocol
+
+Evaluate on validation without changing the frozen test split:
+- Imitation: precision/recall/F1/confusion against procedural targets, clearly distinguished from hindsight direction labels.
+- Probabilities: Brier score, log-loss and calibration against base-rate baselines; do not present model confidence as a calibrated probability.
+- Tool tasks: schema validity, argument correctness, status handling and numerical agreement with deterministic tool results.
+- Trade management: action agreement, net R, drawdown and MFE capture on validation paths, with rare-action coverage reported separately.
+- Robustness: year/session/volatility regime and explicit cost scenarios.
+
+Any claim of predictive edge requires independent, leakage-controlled out-of-sample evaluation. The existing reports do not establish profitability or a validated directional edge.
+
+## 4. Runtime and safety
+
+Expose the `broker_context.cli tool-schemas` definitions to the model runtime only when the corresponding tools are implemented and available. Require tools for broker-specific sizing, costs, spread and account context. Missing, stale or incomplete broker data must cause a safe abstention rather than invented values.
+
+Live MT5 integration is read-only in this project. Live order execution is out of scope. Never allow a fine-tuned language model to bypass deterministic risk checks.
