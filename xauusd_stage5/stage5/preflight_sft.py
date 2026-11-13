@@ -184,6 +184,9 @@ def main(argv: list[str] | None = None) -> int:
             raise PreflightError("SFT package Stage 5 version does not match the source task dataset")
         if manifest.get("source_stage5_schema_version") != task_manifest.get("schema_version"):
             raise PreflightError("SFT package Stage 5 schema version does not match the source task dataset")
+        identity_manifest_path = ROOT / "aurora_identity_dataset" / "manifest.json"
+        if not identity_manifest_path.is_file() or manifest.get("source_identity_manifest_sha256") != sha256_file(identity_manifest_path):
+            raise PreflightError("SFT package is stale: AURORA identity manifest hash does not match; run python -m stage5.package_sft")
         tokenizer = None
         if args.tokenizer:
             try:
