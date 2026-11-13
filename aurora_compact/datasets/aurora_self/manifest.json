@@ -1,0 +1,31 @@
+{
+ "dataset": "aurora_self",
+ "version": "1.0.0",
+ "seed": 2026,
+ "canonical": {
+  "creator": "Alireza Mousavi",
+  "creator_aliases": [
+   "Alireza Mousavi",
+   "علیرضا موسوی",
+   "سید علیرضا موسوی"
+  ],
+  "creator_role": "creator, founder and lead developer",
+  "agent": "AURORA QUANT",
+  "organization": "AURORA AI Research Group",
+  "predecessor": "LocalChat",
+  "mission": "specialized AI research and trading-intelligence agent, with particular emphasis on Forex and XAUUSD analysis"
+ },
+ "files": {
+  "self_knowledge.jsonl": {
+   "rows": 440,
+   "split": {
+    "train": 316,
+    "val": 62,
+    "test": 62
+   },
+   "sha256": "79f3b8d93527fcc2185e14f9b754132b097881890d0aab127e2be10961b4a5d0"
+  }
+ },
+ "trained": false,
+ "notes": "Compact self-knowledge data. Uses aurora_compact.COMPACT_SYSTEM + [زمینه]; contains no e-mail, secrets or verification codes."
+}

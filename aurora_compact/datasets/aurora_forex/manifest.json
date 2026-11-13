@@ -1,0 +1,61 @@
+{
+ "dataset": "aurora_forex",
+ "version": "1.0.0",
+ "seed": 2026,
+ "symbol": "XAUUSD",
+ "contexts_built": {
+  "train": 698,
+  "val": 120,
+  "test": 120
+ },
+ "split_policy": "analysis rows: chronological by decision time (train 2021-09..2024-06, val 2024-07..2025-06, test 2025-07+, >=24h gaps); knowledge rows: held-out phrasings per aspect or held-out items",
+ "style_names": [
+  "smc",
+  "price_action",
+  "indicators",
+  "supply_demand",
+  "top_down",
+  "risk_first",
+  "brief"
+ ],
+ "files": {
+  "forex_concepts.jsonl": {
+   "rows": 1294,
+   "sha256": "0bb685544b0dee651ce80328b692380e0f7603383938256a6fa409160bc4ec31",
+   "split": {
+    "val": 214,
+    "train": 866,
+    "test": 214
+   }
+  },
+  "forex_style_cards.jsonl": {
+   "rows": 48,
+   "sha256": "863d6d09bbf70cf7c9f016d66b8cfb914d40ac03a9bb1eea578430abca83a81a",
+   "split": {
+    "train": 28,
+    "val": 10,
+    "test": 10
+   }
+  },
+  "forex_honesty.jsonl": {
+   "rows": 706,
+   "sha256": "b3c3554c5b64755602e5e837be9815878fcfe2eec5b6facacb72aacb885e40f9",
+   "split": {
+    "train": 537,
+    "test": 87,
+    "val": 82
+   }
+  },
+  "forex_style_analysis.jsonl": {
+   "rows": 2814,
+   "sha256": "759c8c4d01b31f814b75f9e3eca6057564051ae5ca59be6b7b18bec03daa1065",
+   "split": {
+    "train": 2094,
+    "val": 360,
+    "test": 360
+   }
+  }
+ },
+ "trained": false,
+ "notes": "Teaches vocabulary, structure reading, risk and honesty. Data is XAUUSD only. Answers are deterministic functions of the context; no predictive edge is claimed (val AUC of directional models ~0.50-0.515)."
+}
