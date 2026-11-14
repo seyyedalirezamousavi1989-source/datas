@@ -1,0 +1,264 @@
+{
+ "screen": {
+  "XAUUSD": {
+   "bars": 35464,
+   "years": 6.0,
+   "median_spread_over_atr": 0.0178,
+   "multi_day_gaps": 13,
+   "pass": true,
+   "reasons": []
+  }
+ },
+ "universe": [
+  "XAUUSD"
+ ],
+ "symbols": {
+  "XAUUSD": {
+   "dev": [
+    1605056400,
+    1762797600
+   ],
+   "wf": {
+    "folds": [
+     {
+      "test": [
+       1652392800,
+       1668171600
+      ],
+      "chosen": "hour_drift:hour=11,rr=1.5,side=-1",
+      "in_sample_t": 1.22,
+      "n": 125,
+      "mean": 0.11794457948637146
+     },
+     {
+      "test": [
+       1668171600,
+       1683950400
+      ],
+      "chosen": "hour_drift:hour=11,rr=1.5,side=-1",
+      "in_sample_t": 1.81,
+      "n": 118,
+      "mean": -0.1279166694468857
+     },
+     {
+      "test": [
+       1683950400,
+       1699729200
+      ],
+      "chosen": "hour_drift:hour=10,rr=1.5,side=-1",
+      "in_sample_t": 1.17,
+      "n": 123,
+      "mean": 0.025165028871383353
+     },
+     {
+      "test": [
+       1699729200,
+       1715508000
+      ],
+      "chosen": "squeeze:rank=0.2,rr=3.0,stop=1.5",
+      "in_sample_t": 1.28,
+      "n": 62,
+      "mean": 0.13484083936549246
+     },
+     {
+      "test": [
+       1715508000,
+       1731286800
+      ],
+      "chosen": "hour_drift:hour=21,rr=1.5,side=1",
+      "in_sample_t": 1.58,
+      "n": 111,
+      "mean": 0.3589363375824028
+     },
+     {
+      "test": [
+       1731286800,
+       1747065600
+      ],
+      "chosen": "hour_drift:hour=21,rr=1.5,side=1",
+      "in_sample_t": 2.55,
+      "n": 122,
+      "mean": 0.24412574305168952
+     },
+     {
+      "test": [
+       1747065600,
+       1762797600
+      ],
+      "chosen": "hour_drift:hour=21,rr=1.5,side=1",
+      "in_sample_t": 3.17,
+      "n": 119,
+      "mean": 0.1408360360269644
+     }
+    ],
+    "pooled": {
+     "n": 780,
+     "mean": 0.12498602364623872,
+     "lo": 0.03185724412114393,
+     "hi": 0.21690352624292736,
+     "win": 0.4551282051282051,
+     "t": 2.6846270513437864
+    },
+    "fold_positive_share": 0.8571428571428571,
+    "avg_config_mean_oos": -0.014238477749660746
+   },
+   "spa": {
+    "p": 0.059850374064837904,
+    "k": 216,
+    "best_t": 3.303079184788806
+   },
+   "top": [
+    {
+     "n": 1139,
+     "mean": 0.12318277357443604,
+     "lo": 0.050915656700483466,
+     "hi": 0.19387913350850278,
+     "win": 0.46532045654082527,
+     "t": 3.338867587196288,
+     "id": "hour_drift:hour=21,rr=1.5,side=1",
+     "family": "hour_drift"
+    },
+    {
+     "n": 1133,
+     "mean": 0.10717174748628276,
+     "lo": 0.03126021918102378,
+     "hi": 0.1794791425075229,
+     "win": 0.45984112974404234,
+     "t": 2.8988549644822954,
+     "id": "hour_drift:hour=22,rr=1.5,side=1",
+     "family": "hour_drift"
+    },
+    {
+     "n": 1125,
+     "mean": 0.09309296800709971,
+     "lo": 0.017043468429984214,
+     "hi": 0.16395960160509684,
+     "win": 0.45511111111111113,
+     "t": 2.5128499358910603,
+     "id": "hour_drift:hour=20,rr=1.5,side=1",
+     "family": "hour_drift"
+    }
+   ],
+   "breadth": {
+    "ema_pullback": 0.7222222222222222,
+    "donchian": 0.4375,
+    "range_rev": 0.1,
+    "sweep": 0.0,
+    "squeeze": 0.5833333333333334,
+    "hour_drift": 0.3333333333333333,
+    "vol_mom": 0.4166666666666667
+   },
+   "n_trials_registry": 432,
+   "finalists": [
+    {
+     "timing_null": {
+      "observed": 0.12318277357443604,
+      "null_mean": 0.013810501839301631,
+      "null_p": 0.024390243902439025
+     },
+     "id": "hour_drift:hour=21,rr=1.5,side=1",
+     "dev": {
+      "n": 1139,
+      "mean": 0.12318277357443604,
+      "lo": 0.050915656700483466,
+      "hi": 0.19387913350850278,
+      "t": 3.338867587196288
+     },
+     "cost2x": {
+      "n": 1139,
+      "mean": 0.08858088874556204,
+      "lo": 0.016253035442566597
+     },
+     "replication": [],
+     "replication_positive": 0,
+     "replication_of": 0,
+     "family_breadth": 0.3333333333333333,
+     "gates": {
+      "spa_p_below_alpha": false,
+      "walk_forward_oos_positive_ci": true,
+      "folds_positive": true,
+      "survives_2x_costs": true,
+      "beats_timing_null": true,
+      "replicates_elsewhere": true,
+      "family_breadth": false,
+      "all": false
+     }
+    },
+    {
+     "timing_null": {
+      "observed": 0.10717174748628276,
+      "null_mean": 0.01525898706824643,
+      "null_p": 0.024390243902439025
+     },
+     "id": "hour_drift:hour=22,rr=1.5,side=1",
+     "dev": {
+      "n": 1133,
+      "mean": 0.10717174748628276,
+      "lo": 0.03126021918102378,
+      "hi": 0.1794791425075229,
+      "t": 2.8988549644822954
+     },
+     "cost2x": {
+      "n": 1133,
+      "mean": 0.06799795202562389,
+      "lo": -0.007876392192359055
+     },
+     "replication": [],
+     "replication_positive": 0,
+     "replication_of": 0,
+     "family_breadth": 0.3333333333333333,
+     "gates": {
+      "spa_p_below_alpha": false,
+      "walk_forward_oos_positive_ci": true,
+      "folds_positive": true,
+      "survives_2x_costs": true,
+      "beats_timing_null": true,
+      "replicates_elsewhere": true,
+      "family_breadth": false,
+      "all": false
+     }
+    },
+    {
+     "timing_null": {
+      "observed": 0.09309296800709971,
+      "null_mean": 0.014668865668612937,
+      "null_p": 0.04878048780487805
+     },
+     "id": "hour_drift:hour=20,rr=1.5,side=1",
+     "dev": {
+      "n": 1125,
+      "mean": 0.09309296800709971,
+      "lo": 0.017043468429984214,
+      "hi": 0.16395960160509684,
+      "t": 2.5128499358910603
+     },
+     "cost2x": {
+      "n": 1125,
+      "mean": 0.05913486880563682,
+      "lo": -0.016674620552829904
+     },
+     "replication": [],
+     "replication_positive": 0,
+     "replication_of": 0,
+     "family_breadth": 0.3333333333333333,
+     "gates": {
+      "spa_p_below_alpha": false,
+      "walk_forward_oos_positive_ci": true,
+      "folds_positive": true,
+      "survives_2x_costs": true,
+      "beats_timing_null": true,
+      "replicates_elsewhere": true,
+      "family_breadth": false,
+      "all": false
+     }
+    }
+   ],
+   "verdict": "no_edge"
+  }
+ },
+ "holdout_months": 12,
+ "config_count": 216,
+ "version": 1,
+ "overall": "no_edge",
+ "digest": "گزارش آزمایشگاه لبه (216 پیکربندی ثابت در ۷ خانواده؛ نتیجهٔ کلی: لبه‌ای پیدا نشد)\n- XAUUSD: SPA p=0.06 (K=216) | walk-forward بیرون‌نمونه n=780 میانگین +0.12R حد پایین CI95% +0.03 | فولدهای مثبت 86% | حکم: no_edge\n  بهترین بر پایهٔ توسعه: hour_drift:hour=21,rr=1.5,side=1 (t=3.34) | گیت‌های ردشده: spa_p_below_alpha, family_breadth\nپنجرهٔ مهرشده فقط یک‌بار برای هر نامزد باز می‌شود؛ حتی نامزد قبول‌شده سودآوری آینده را تضمین نمی‌کند."
+}
