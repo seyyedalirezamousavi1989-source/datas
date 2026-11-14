@@ -1,0 +1,64 @@
+{
+ "dataset": "aurora_trades_v3",
+ "symbol": "XAUUSD",
+ "trades": 7678,
+ "by_split": {
+  "train": 4134,
+  "test": 2023,
+  "val": 1521
+ },
+ "patterns_tested": 585,
+ "tiers": {
+  "none": 516,
+  "weak": 69
+ },
+ "tier_vs_test": {
+  "none": {
+   "patterns": 508,
+   "share_positive_in_test": 0.644,
+   "median_test_mean_R": 0.065
+  },
+  "weak": {
+   "patterns": 69,
+   "share_positive_in_test": 0.768,
+   "median_test_mean_R": 0.099
+  }
+ },
+ "contexts": {
+  "train": 1000,
+  "val": 180,
+  "test": 180
+ },
+ "files": {
+  "trades_v3_eval.jsonl": {
+   "rows": 1360,
+   "split": {
+    "train": 1000,
+    "test": 180,
+    "val": 180
+   }
+  },
+  "trades_v3_review.jsonl": {
+   "rows": 1079,
+   "split": {
+    "test": 142,
+    "train": 790,
+    "val": 147
+   }
+  },
+  "trades_v3_table.jsonl": {
+   "rows": 21,
+   "split": {
+    "train": 19,
+    "test": 2
+   }
+  },
+  "trades_v3_why.jsonl": {
+   "rows": 8,
+   "split": {
+    "train": 8
+   }
+  }
+ },
+ "trained": false
+}
