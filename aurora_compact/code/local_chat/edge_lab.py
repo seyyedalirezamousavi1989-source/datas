@@ -455,9 +455,10 @@ def search(frames: Dict[str, pd.DataFrame], registry: Optional[Registry] = None,
                         "replication_positive": pos, "replication_of": len(rep), "family_breadth": info["breadth"].get(fam)}
             finalist["gates"] = _gates(info, finalist)
             info["finalists"].append(finalist)
-        info["verdict"] = "candidate" if any(f["gates"]["all"] for f in info["finalists"]) else "no_edge"
+        info["verdict"] = ("candidate" if any(f["gates"]["all"] for f in info["finalists"]) else
+                           "candidate_symbol_specific" if any(f["gates"]["core"] for f in info["finalists"]) else "no_edge")
         info.pop("_pooled_r", None)
-    res["overall"] = "candidate" if any(i["verdict"] == "candidate" for i in res["symbols"].values()) else "no_edge"
+    res["overall"] = "candidate" if any(i["verdict"].startswith("candidate") for i in res["symbols"].values()) else "no_edge"
     res["digest"] = digest(res)
     return res
 
@@ -484,7 +485,9 @@ def _gates(info: dict, f: dict) -> dict:
          "beats_timing_null": f["timing_null"]["null_p"] <= 0.05,
          "replicates_elsewhere": (f["replication_of"] == 0) or (f["replication_positive"] >= math.ceil(f["replication_of"] / 2)),
          "family_breadth": (f["family_breadth"] or 0) >= BREADTH_MIN}
-    g["all"] = all(g.values())
+    core = ("spa_p_below_alpha", "walk_forward_oos_positive_ci", "folds_positive", "survives_2x_costs", "beats_timing_null")
+    g["core"] = all(g[k] for k in core)                 # statistically credible on this symbol
+    g["all"] = all(v for k, v in g.items() if k not in ("core",))     # plus replication elsewhere and family breadth (needed to call it general)
     return g
 
 
@@ -531,7 +534,7 @@ def digest(res: dict, max_chars: int = 1800) -> str:
         lo = "-" if p["lo"] is None else f"{p['lo']:+.2f}"
         L.append(f"- {s}: SPA p={i['spa']['p']:.2f} (K={i['spa']['k']}) | walk-forward بیرون‌نمونه n={p['n']} میانگین {mean} حد پایین CI95% {lo} | فولدهای مثبت {i['wf']['fold_positive_share'] * 100:.0f}% | حکم: {i['verdict']}")
         for f in i["finalists"][:1]:
-            bad = [k for k, v in f["gates"].items() if k != "all" and not v]
+            bad = [k for k, v in f["gates"].items() if k not in ("all", "core") and not v]
             L.append(f"  بهترین بر پایهٔ توسعه: {f['id']} (t={f['dev']['t']:.2f}) | گیت‌های ردشده: {', '.join(bad) if bad else 'هیچ'}")
     L.append("پنجرهٔ مهرشده فقط یک‌بار برای هر نامزد باز می‌شود؛ حتی نامزد قبول‌شده سودآوری آینده را تضمین نمی‌کند.")
     t = "\n".join(L)
