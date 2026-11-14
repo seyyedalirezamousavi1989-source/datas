@@ -1,0 +1,6 @@
+گزارش آزمایشگاه لبه (216 پیکربندی ثابت در ۷ خانواده؛ نتیجهٔ کلی: لبه‌ای پیدا نشد)
+- XAUUSD: SPA p=0.06 (K=216) | walk-forward بیرون‌نمونه n=780 میانگین +0.12R حد پایین CI95% +0.03 | فولدهای مثبت 86% | حکم: no_edge
+  بهترین بر پایهٔ توسعه: hour_drift:hour=21,rr=1.5,side=1 (t=3.34) | گیت‌های ردشده: spa_p_below_alpha, replicates_elsewhere, family_breadth
+- EURUSD: SPA p=1.00 (K=216) | walk-forward بیرون‌نمونه n=761 میانگین -0.09R حد پایین CI95% -0.17 | فولدهای مثبت 29% | حکم: no_edge
+  بهترین بر پایهٔ توسعه: squeeze:rank=0.1,rr=3.0,stop=2.0 (t=0.27) | گیت‌های ردشده: spa_p_below_alpha, walk_forward_oos_positive_ci, folds_positive, survives_2x_costs, beats_timing_null, replicates_elsewhere, family_breadth
+پنجرهٔ مهرشده فقط یک‌بار برای هر نامزد باز می‌شود؛ حتی نامزد قبول‌شده سودآوری آینده را تضمین نمی‌کند.

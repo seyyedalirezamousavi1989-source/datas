@@ -124,6 +124,8 @@ def eval_answer(rng, row, lv, tier, base_tier, ev_parts, ctx=""):
              f"سطوح قاعده: ورود نزدیک {lv['entry']}، حد ضرر {lv['stop']}، هدف {lv['target']}. اگر قیمت حد ضرر را بشکند سناریو باطل است و بدون جابه‌جایی حد ضرر خارج می‌شوید."]
     if lose is not None:
         lines.append(f"یادآوری: حتی در تاریخچهٔ همین خانواده حدود {lose}% معاملات ضرر بوده‌اند؛ هر معاملهٔ تکی می‌تواند ضرر باشد و این پیش‌بینی نتیجهٔ همین معامله نیست.")
+    if "میانگین -" in base:
+        lines.append("نکته: میانگین تاریخی این ستاپ (پس از هزینه) منفی بوده است؛ یعنی در گذشته به‌طور متوسط ضرر داده و دلیلی برای انتظار سود از آن نداریم.")
     lines.append(DISCLAIMER)
     return "\n\n".join(lines), ([str(lose)] if lose is not None else [])
 
@@ -176,10 +178,10 @@ def table_answer(P, top):
     return "\n\n".join(parts)
 
 
-def build(out_dir, candles_dir, seed=2028, n=None, symbol="XAUUSD"):
+def build(out_dir, candles_dir, seed=2028, n=None, symbol="XAUUSD", digits=2, spread=0.2, floor=0.0):
     n = n or {"train": 1000, "val": 180, "test": 180}
     rng = random.Random(seed)
-    df = el.load_csv(candles_dir, symbol)
+    df = el.load_csv(candles_dir, symbol, floor=floor)
     T = tp.trades_table(df)
     P = tp.mine(T)
     candles = v1.load_candles(candles_dir, symbol)
@@ -194,13 +196,13 @@ def build(out_dir, candles_dir, seed=2028, n=None, symbol="XAUUSD"):
             t = pd.Timestamp(int(row["entry_epoch"]), unit="s")
             if any(abs((t - u).total_seconds()) < 5 * 3600 for u in last):
                 continue
-            data, info = v1.make_context(candles, t, smc=True, symbol=symbol, digits=2, spread=0.2)
+            data, info = v1.make_context(candles, t, smc=True, symbol=symbol, digits=digits, spread=spread)
             if data is None:
                 continue
             last.append(t)
             cnt += 1
             ev_parts, tier, base_tier = evidence_block(P, row)
-            lv = level_block(df, row)
+            lv = level_block(df, row, digits)
             full = data + "\n\n" + block_text(row, ev_parts, lv, symbol)
             meta = {"t": info["t"], "te": info["te"], "last_open": info["last_open"], "symbol": symbol, "strategy": row["strategy"], "side": int(row["side"]), "tier": tier,
                     "derived": []}
@@ -284,7 +286,13 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="training_data/aurora_trades_v3")
     ap.add_argument("--candles", default="/home/claude/work/XAUUSD_Dataset/out/01_normalized")
+    ap.add_argument("--symbol", default="XAUUSD")
+    ap.add_argument("--digits", type=int, default=2)
+    ap.add_argument("--spread", type=float, default=0.2)
+    ap.add_argument("--floor", type=float, default=0.0)
+    ap.add_argument("--n", default="", help="train,val,test contexts")
     a = ap.parse_args()
-    m = build(a.out, a.candles)
+    n = dict(zip(("train", "val", "test"), map(int, a.n.split(",")))) if a.n else None
+    m = build(a.out, a.candles, symbol=a.symbol, digits=a.digits, spread=a.spread, floor=a.floor, n=n)
     print(json.dumps({k: m[k] for k in ("trades", "by_split", "patterns_tested", "tiers", "tier_vs_test", "contexts")}, ensure_ascii=False, indent=1))
     print({k: v["rows"] for k, v in m["files"].items()}, "sft:", export_sft(a.out, os.path.join(a.out, "sft")))

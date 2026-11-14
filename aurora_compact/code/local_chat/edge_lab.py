@@ -67,7 +67,7 @@ def frame_from_columns(cols: dict, point: float = 0.0, name: str = "") -> pd.Dat
     return d
 
 
-def load_csv(candles_dir: str, symbol: str, tf: str = "H1", point: Optional[float] = None) -> pd.DataFrame:
+def load_csv(candles_dir: str, symbol: str, tf: str = "H1", point: Optional[float] = None, floor: float = 0.0) -> pd.DataFrame:
     f = "Daily" if tf == "D1" else tf
     d = pd.read_csv(os.path.join(candles_dir, f"{symbol}_{f}_normalized.csv"), parse_dates=["time"])
     d["epoch"] = ((d["time"] - pd.Timestamp("1970-01-01")) // pd.Timedelta(seconds=1)).astype("int64")
@@ -78,7 +78,7 @@ def load_csv(candles_dir: str, symbol: str, tf: str = "H1", point: Optional[floa
     else:
         d["spread_price"] = np.nan
     med = np.nanmedian(d["spread_price"]) if np.isfinite(d["spread_price"]).any() else 0.0
-    d["spread_price"] = d["spread_price"].fillna(med)
+    d["spread_price"] = np.maximum(d["spread_price"].fillna(med), floor)    # floor = all-in round-turn cost (spread + commission) when the export shows raw spreads
     return d.sort_values("epoch").reset_index(drop=True)
 
 
@@ -552,7 +552,8 @@ def _frames(a):
     out = {}
     for s in syms:
         try:
-            out[s] = load_mt5(s, a.bars) if a.mt5 else load_csv(a.candles, s)
+            fl = dict(kv.split("=") for kv in a.floors.split(",") if kv)
+            out[s] = load_mt5(s, a.bars) if a.mt5 else load_csv(a.candles, s, floor=float(fl.get(s, 0)))
         except Exception as e:  # noqa: BLE001
             print(f"skip {s}: {e}")
     return out
@@ -566,6 +567,7 @@ def main(argv=None):
     ap.add_argument("--bars", type=int, default=60000)
     ap.add_argument("--symbols", default=",".join(DEFAULT_SYMBOLS))
     ap.add_argument("--out", default="lab_out")
+    ap.add_argument("--floors", default="", help="SYMBOL=price,... minimum all-in cost in price units (e.g. EURUSD=0.00008 = 0.8 pip incl. commission)")
     ap.add_argument("--finalist")
     ap.add_argument("--holdout-months", type=int, default=HOLDOUT_MONTHS)
     a = ap.parse_args(argv)

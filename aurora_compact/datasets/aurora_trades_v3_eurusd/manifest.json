@@ -1,0 +1,66 @@
+{
+ "dataset": "aurora_trades_v3",
+ "symbol": "EURUSD",
+ "trades": 7966,
+ "by_split": {
+  "train": 4351,
+  "test": 2082,
+  "val": 1533
+ },
+ "patterns_tested": 625,
+ "tiers": {
+  "none": 623,
+  "weak": 2
+ },
+ "tier_vs_test": {
+  "none": {
+   "patterns": 613,
+   "share_positive_in_test": 0.204,
+   "median_test_mean_R": -0.147
+  },
+  "weak": {
+   "patterns": 2,
+   "share_positive_in_test": 0.0,
+   "median_test_mean_R": -0.216
+  }
+ },
+ "contexts": {
+  "train": 450,
+  "val": 80,
+  "test": 80
+ },
+ "files": {
+  "trades_v3_eval.jsonl": {
+   "rows": 610,
+   "split": {
+    "train": 450,
+    "test": 80,
+    "val": 80
+   }
+  },
+  "trades_v3_review.jsonl": {
+   "rows": 481,
+   "split": {
+    "val": 68,
+    "train": 347,
+    "test": 66
+   }
+  },
+  "trades_v3_table.jsonl": {
+   "rows": 8,
+   "split": {
+    "train": 7,
+    "val": 1
+   }
+  },
+  "trades_v3_why.jsonl": {
+   "rows": 7,
+   "split": {
+    "train": 5,
+    "val": 1,
+    "test": 1
+   }
+  }
+ },
+ "trained": false
+}
