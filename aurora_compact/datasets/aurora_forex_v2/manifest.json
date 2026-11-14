@@ -1,0 +1,59 @@
+{
+ "dataset": "aurora_forex_v2",
+ "version": "2.0.0",
+ "seed": 2027,
+ "symbols": [
+  "XAUUSD"
+ ],
+ "contexts_built": {
+  "XAUUSD": {
+   "train": 516,
+   "val": 90,
+   "test": 90
+  }
+ },
+ "files": {
+  "forex_v2_strategy.jsonl": {
+   "rows": 1036,
+   "split": {
+    "val": 130,
+    "train": 776,
+    "test": 130
+   },
+   "sha256": "b9e429be364f82c974f2135a0af1cdaaeebb8dc9e97698c67beb5f5e008ef895"
+  },
+  "forex_v2_reasoning.jsonl": {
+   "rows": 508,
+   "split": {
+    "val": 61,
+    "train": 381,
+    "test": 66
+   },
+   "sha256": "fdf660d21052d261cc1ff7fa9f1f3ad8fc1b78ef586e8fe7b9333be05d8a25a7"
+  },
+  "forex_v2_tool_routing.jsonl": {
+   "rows": 204,
+   "split": {
+    "train": 152,
+    "test": 26,
+    "val": 26
+   },
+   "sha256": "33566f566d767345268484e8f7756f5cf250856554e23e5f229573567b9907f1"
+  }
+ },
+ "trained": false,
+ "strategy_engine": {
+  "strategies": [
+   "ema_pullback",
+   "donchian_breakout",
+   "range_reversion",
+   "sweep_reversal",
+   "squeeze_breakout"
+  ],
+  "max_hold_bars": 48,
+  "stop_atr": 1.5,
+  "ci": 0.99,
+  "min_trades_significant": 30
+ },
+ "notes": "Real XAUUSD history shows NO significant strategy at any sampled time, so the 'significant' branch is taught with user-pasted synthetic scorecards (meta.synthetic=true). forex_v2_tool_routing.jsonl is optional (tool_calls format) and is not merged by default."
+}

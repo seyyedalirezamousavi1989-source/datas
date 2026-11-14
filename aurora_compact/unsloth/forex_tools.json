@@ -1,0 +1,159 @@
+[
+ {
+  "type": "function",
+  "function": {
+   "name": "render_forex_chart",
+   "description": "Draw a candlestick chart image from live MT5 candles (built by the app, shown in the chat, no vision model needed). Call it when the user wants to SEE or CHANGE a chart / screenshot / picture (arrows, FVG, highs and lows, white background). Not for analysis, forecasts or explanations: use get_market_analysis.",
+   "parameters": {
+    "type": "object",
+    "properties": {
+     "symbol": {
+      "type": "string",
+      "description": "Instrument, e.g. XAUUSD (gold), EURUSD, GBPJPY."
+     },
+     "timeframe": {
+      "type": "string",
+      "enum": [
+       "M1",
+       "M5",
+       "M15",
+       "M30",
+       "H1",
+       "H4",
+       "D1",
+       "W1"
+      ],
+      "description": "Omit to keep the one used earlier in the conversation."
+     },
+     "overlays": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "enum": [
+        "fvg",
+        "scenario",
+        "swings"
+       ]
+      },
+      "description": "fvg = Fair Value Gaps. scenario = the app itself draws the arrow of the MOST PROBABLE scenario with SL/TP (do NOT call get_market_analysis first). swings = swing highs (سقف) and lows (کف). To edit the previous chart repeat its overlays and add the new ones."
+     },
+     "fvg_scope": {
+      "type": "string",
+      "enum": [
+       "most_important",
+       "top3",
+       "all"
+      ],
+      "description": "How many FVG zones (default most_important)."
+     },
+     "theme": {
+      "type": "string",
+      "enum": [
+       "dark",
+       "light"
+      ],
+      "description": "dark (default) or light = WHITE background."
+     },
+     "annotations": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+       "type": "object",
+       "properties": {
+        "type": {
+         "type": "string",
+         "enum": [
+          "arrow",
+          "marker",
+          "hline",
+          "text"
+         ]
+        },
+        "price": {
+         "type": "number",
+         "description": "Price where the item starts / sits."
+        },
+        "bar": {
+         "type": "integer",
+         "description": "Candle offset from the last one: 0 = last, -5 = five ago, 10 = ahead."
+        },
+        "to_price": {
+         "type": "number",
+         "description": "Arrow tip price (arrow only)."
+        },
+        "to_bar": {
+         "type": "integer",
+         "description": "Arrow tip candle offset (arrow only)."
+        },
+        "label": {
+         "type": "string",
+         "description": "Short Latin/digit label, e.g. BUY, TP1, SL 2650."
+        },
+        "color": {
+         "type": "string",
+         "enum": [
+          "green",
+          "red",
+          "amber",
+          "blue",
+          "neutral"
+         ]
+        },
+        "shape": {
+         "type": "string",
+         "enum": [
+          "up",
+          "down",
+          "dot"
+         ],
+         "description": "Marker shape."
+        }
+       },
+       "required": [
+        "type",
+        "price"
+       ]
+      },
+      "description": "Extra arrows / markers / lines / labels; only prices from data in this conversation."
+     }
+    },
+    "required": [
+     "symbol"
+    ]
+   }
+  }
+ },
+ {
+  "type": "function",
+  "function": {
+   "name": "get_market_analysis",
+   "description": "Fetch live MT5 data and the indicator/level digest for an ANALYSIS question (trend, support/resistance, scenarios, entries, backtests). Call it before answering any analysis or forecast question about an instrument; not when the user only wants a picture.",
+   "parameters": {
+    "type": "object",
+    "properties": {
+     "symbols": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      },
+      "description": "Instruments (max 3); omit to use the ones from the conversation."
+     },
+     "timeframe": {
+      "type": "string",
+      "enum": [
+       "M1",
+       "M5",
+       "M15",
+       "M30",
+       "H1",
+       "H4",
+       "D1",
+       "W1"
+      ],
+      "description": "Trading timeframe if the user named one."
+     }
+    }
+   }
+  }
+ }
+]

@@ -16,8 +16,8 @@ except ImportError:                       # pragma: no cover
     import forex_analysis as fa
 
 NUM = re.compile(r"(?<![\w.])[-+]?\d+(?:\.\d+)?")
-CONST = {str(x) for x in (0, 1, 2, 3, 4, 5, 6, 7, 10, 12, 14, 20, 25, 26, 30, 45, 50, 55, 70, 100, 120, 200, 300, 9, 24, 15, 0.1, 0.25, 0.5, 1.0, 2.0)}
-BAD = [r"\bguaranteed (?:profit|returns)\b(?<!no guaranteed profit)", r"تضمین می‌کنم", r"\bI guarantee\b", "@", "gmail", "radmehr", "mousavi68", "api_key", "password",
+CONST = {str(x) for x in (0, 1, 2, 3, 4, 5, 6, 7, 10, 12, 14, 20, 25, 26, 30, 45, 50, 55, 70, 100, 120, 200, 300, 9, 24, 15, 0.1, 0.25, 0.5, 1.0, 2.0, 99)}
+BAD = [r"\bguaranteed (?:profit|returns)\b(?<!no guaranteed profit)", r"تضمین می‌کنم", r"\bI guarantee\b", "@", "api_key", "password",
        "رمز عبور:", "verification code is"]
 BAD_RE = [re.compile(b, re.I) for b in BAD]
 STYLES = ("smc", "price_action", "indicators", "supply_demand", "top_down", "risk_first", "brief")

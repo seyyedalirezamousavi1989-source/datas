@@ -10,6 +10,8 @@ import argparse
 ap = argparse.ArgumentParser()
 ap.add_argument("--model", required=True, help="HF repo / local path of the base model (not guessed here)")
 ap.add_argument("--data", default=".")
+ap.add_argument("--prefix", default="aurora_compact_v2", help="aurora_compact (v1) | aurora_compact_v2 | aurora_compact_v2_tools")
+ap.add_argument("--tools_json", default=None, help="forex_tools.json; passed to the chat template for rows that contain tool_calls")
 ap.add_argument("--out", default="aurora_lora")
 ap.add_argument("--epochs", type=float, default=2)
 ap.add_argument("--lr", type=float, default=1e-4)
@@ -26,12 +28,21 @@ model = FastLanguageModel.get_peft_model(
     model, r=16, lora_alpha=32, lora_dropout=0.0,
     target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"], use_gradient_checkpointing="unsloth")
 
-ds = load_dataset("json", data_files={"train": f"{a.data}/aurora_compact_train.jsonl", "val": f"{a.data}/aurora_compact_val.jsonl"})
+ds = load_dataset("json", data_files={"train": f"{a.data}/{a.prefix}_train.jsonl", "val": f"{a.data}/{a.prefix}_val.jsonl"})
+
+
+import json
+TOOLS = json.load(open(a.tools_json, encoding="utf-8")) if a.tools_json else None
 
 
 def fmt(batch):
-    # enable_thinking=False keeps the training text free of <think> blocks (answers are direct); drop the kwarg if your template lacks it
-    return {"text": [tok.apply_chat_template(m, tokenize=False, add_generation_prompt=False, enable_thinking=False) for m in batch["messages"]]}
+    # enable_thinking=False keeps the training text free of <think> blocks (answers are direct); drop the kwarg if your template lacks it.
+    # Tool schemas are given only to rows that contain a tool call (keeps ordinary rows short).
+    out = []
+    for m in batch["messages"]:
+        has_call = any(x.get("tool_calls") for x in m)
+        out.append(tok.apply_chat_template(m, tools=TOOLS if (TOOLS and has_call) else None, tokenize=False, add_generation_prompt=False, enable_thinking=False))
+    return {"text": out}
 
 
 ds = ds.map(fmt, batched=True, remove_columns=ds["train"].column_names)

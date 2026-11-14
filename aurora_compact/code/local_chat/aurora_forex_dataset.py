@@ -36,17 +36,17 @@ SPLITS = {"train": ("2021-09-01", "2024-06-29"), "val": ("2024-07-02", "2025-06-
 EPOCH0 = None
 
 
-def load_candles(src_dir):
+def load_candles(src_dir, symbol="XAUUSD"):
     import pandas as pd
     out = {}
     for k, f in SRC.items():
-        d = pd.read_csv(os.path.join(src_dir, f"XAUUSD_{f}_normalized.csv"), parse_dates=["time"])
+        d = pd.read_csv(os.path.join(src_dir, f"{symbol}_{f}_normalized.csv"), parse_dates=["time"])
         d["epoch"] = ((d["time"] - pd.Timestamp("1970-01-01")) // pd.Timedelta(seconds=1)).astype("int64")
         out[k] = d
     return out
 
 
-def make_context(candles, t, smc=True):
+def make_context(candles, t, smc=True, symbol="XAUUSD", digits=2, spread=0.2):
     """Context text for decision time ``t`` (pandas Timestamp, broker server time). Returns (text, audit_info)."""
     import pandas as pd
     te = int((t - pd.Timestamp("1970-01-01")).total_seconds())
@@ -59,9 +59,8 @@ def make_context(candles, t, smc=True):
                     "low": m["low"].tolist(), "close": m["close"].tolist()}
         last_open[k] = int(m["epoch"].iloc[-1])
     cl = rates["M15"]["close"][-1]
-    spread = 0.2
-    raw = {"symbol": "XAUUSD", "broker_symbol": "XAUUSD", "info": {"digits": 2, "point": 0.01},
-           "tick": {"bid": cl, "ask": round(cl + spread, 2), "time": te}, "rates": rates}
+    raw = {"symbol": symbol, "broker_symbol": symbol, "info": {"digits": digits, "point": 10 ** -digits},
+           "tick": {"bid": cl, "ask": round(cl + spread, digits), "time": te}, "rates": rates}
     old = fa.ENABLE_SMC
     fa.ENABLE_SMC = smc
     try:

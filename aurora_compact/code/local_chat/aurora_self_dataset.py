@@ -29,7 +29,7 @@ except ImportError:                       # pragma: no cover
 MODELS = ["qwen3.5:4b", "qwen3:4b", "qwen3-coder:30b", None]
 FA_CAP_FA = {k: v for k, v in CAPS.items() if k in CAP_Q}
 STATUS_FA = ai._STATUS_FA
-BAD = [re.compile(p, re.I) for p in (r"@", r"gmail", r"radmehr", r"mousavi68", r"verification code is", r"\bI guarantee\b", r"تضمین می‌کنم")]
+BAD = [re.compile(p, re.I) for p in (r"@", r"verification code is", r"\bI guarantee\b", r"تضمین می‌کنم")]
 
 
 class Rows:
@@ -272,7 +272,7 @@ def build(out_dir, seed=2026):
             caps = [(FA_CAP_FA["web_search"], STATUS_FA["active"]), (FA_CAP_FA["forex_chat"], STATUS_FA["requires_configuration"])]
             emit(R, "overview.with_status", qs, a_over_with(caps), must=[["محدودیت"], ["="]], caps=caps)
             continue
-        emit(R, name, qs, ANS[name], must=MUST[name], must_not=[r"@", r"gmail"])
+        emit(R, name, qs, ANS[name], must=MUST[name], must_not=[r"@"])
     # per-capability status questions (status comes from the [زمینه] line; absent -> not claimed)
     stat_choices = ["active", "available", "disabled", "requires_configuration", "unavailable", "requires_authorization", "experimental", None]
     sa = {
@@ -300,7 +300,7 @@ def build(out_dir, seed=2026):
                 R.add(f"capability.{cid}", "fa", vs(i, n), verified, model, caps, qfa, a, must)
     # English (core intents)
     for name, (qs, ans) in EN.items():
-        emit(R, name + ".en", qs, lambda k, v, m, a=ans: a, lang="en", must=[[""]], must_not=[r"@", r"gmail"])
+        emit(R, name + ".en", qs, lambda k, v, m, a=ans: a, lang="en", must=[[""]], must_not=[r"@"])
     # dedupe / write
     seen, rows = set(), []
     for r in R.rows:
